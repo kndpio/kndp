@@ -1,0 +1,42 @@
+name: OCI images building action
+
+on:
+  pull_request:    
+    branches:
+      - target-branch
+    # Only run the action if the pull request was merged
+    # and not closed without merging
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Save git diff output
+        run: |
+          git diff --name-only HEAD^ HEAD > git_diff.txt
+      - name: Check for Dockerfile changes
+        run: |
+          if grep -q "^apps/.*Dockerfile$" git_diff.txt; then
+            echo "Dockerfile changes detected"
+            # Pull any OCI images that are specified in the Dockerfiles
+            cd kndp && docker-compose pull && cd ..
+          else
+            echo "No Dockerfile changes"
+            exit 78
+          fi
+      - name: Build and push OCI images
+        run: |
+          for file in $(grep -e "^apps/.*Dockerfile$" git_diff.txt); do
+            appname=$(echo $file | cut -d/ -f2)
+            tag=$(git log --format="%H" -n 1)
+            docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t docker.pkg.github.com/${{ github.repository }}/$appname:$tag -t docker.pkg.github.com/${{ github.repository }}/$appname:latest -f $file $(dirname $file)
+            docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker push docker.pkg.github.com/${{ github.repository }}/$appname:$tag
+            docker push docker.pkg.github.com/${{ github.repository }}/$appname:latest
+          done
