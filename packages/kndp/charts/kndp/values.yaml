@@ -11,7 +11,7 @@ argo-cd:
         mountPath: /tmp/extensions
     ingress:
       annotations: 
-         kubernetes.io/ingress.class: ingress-nginx
+         kubernetes.io/ingress.class: nginx
 
   ingress-nginx:
     controller:
