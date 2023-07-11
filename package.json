@@ -1,0 +1,15 @@
+{
+  "name": "@./source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "16.4.3",
+    "@nx/workspace": "16.4.3",
+    "nx": "16.4.3",
+    "prettier": "^2.6.2",
+    "typescript": "~5.1.3"
+  }
+}
