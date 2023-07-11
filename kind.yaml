@@ -16,7 +16,7 @@ nodes:
     hostPort: 443
     protocol: TCP
   extraMounts:
-  - hostPath: ./packages/kndp/src
+  - hostPath: ./
     containerPath: /storage
 
 
