@@ -18,7 +18,6 @@ nodes:
   extraMounts:
   - hostPath: ./packages/kndp/src
     containerPath: /storage
-    protocol: TCP
 
 
 - role: control-plane

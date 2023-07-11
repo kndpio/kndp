@@ -2,6 +2,13 @@
 argo-cd:
   enabled: true
   server:
+    volumes: 
+      - name: ui
+        hostPath: 
+          path: /storage
+    volumeMounts:
+      - name: ui
+        mountPath: /tmp/extensions
     ingress:
       annotations: 
          kubernetes.io/ingress.class: ingress-nginx
