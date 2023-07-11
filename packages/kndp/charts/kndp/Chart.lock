@@ -1,0 +1,12 @@
+dependencies:
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.7.1
+- name: argo-cd
+  repository: https://argoproj.github.io/argo-helm
+  version: 5.38.0
+- name: crossplane
+  repository: https://charts.crossplane.io/master/
+  version: 1.13.0-rc.0.99.gf19d5d34
+digest: sha256:2077a5928f2bd7e3df29b9ecc8eb18ea534e9832e9071951746ae6c2f815b129
+generated: "2023-07-11T15:25:38.962082712+03:00"
