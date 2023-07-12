@@ -34,6 +34,7 @@ jobs:
           CR_GIT_BASE_URL: "https://api.github.com/"
           CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
           CR_SKIP_EXISTING: true
+          CR_PAGES_BRANCH: "release/0.1"
 
 
         
