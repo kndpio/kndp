@@ -1,10 +1,8 @@
 name: Release Charts
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
-      - release/0.1
+      - release/*
 
 jobs:
   release:
@@ -29,12 +27,12 @@ jobs:
 
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_GIT_REPO: helm-charts
-          CR_OWNER: kndp
+          CR_GIT_REPO: kndp
+          CR_OWNER: web-seven
           CR_GIT_BASE_URL: "https://api.github.com/"
           CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
           CR_SKIP_EXISTING: true
-          CR_PAGES_BRANCH: "release/0.1"
+          CR_PAGES_BRANCH: "gh-pages"
 
 
         
