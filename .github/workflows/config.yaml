@@ -1,5 +1,0 @@
-owner: kndp
-git-base-url: https://api.github.com/
-git-repo: helm-charts
-git-upload-url: https://uploads.github.com/
-pages-branch: release/0.1

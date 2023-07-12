@@ -22,7 +22,7 @@ jobs:
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.email "$GITHUB_ACTOR@github.com"
 
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -31,8 +31,14 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.1
         with:
           charts_dir: packages/kndp/charts
-          config: .github/workflows/config.yaml
+
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_GIT_REPO: helm-charts
+          CR_OWNER: kndp
+          CR_GIT_BASE_URL: "https://api.github.com/"
+          CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
+          CR_SKIP_EXISTING: true
+
 
         
