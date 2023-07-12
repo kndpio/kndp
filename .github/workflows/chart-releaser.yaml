@@ -2,7 +2,7 @@ name: Release Charts
 
 on:
   pull_request:
-    type:
+    types:
       - closed
     branches:
       - release/0.1
