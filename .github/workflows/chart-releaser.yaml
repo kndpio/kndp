@@ -24,10 +24,12 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v3
+      - name: list
+        run: ls -a
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
-          charts_dir: /packages/kndp/charts
+          charts_dir: /kndp/packages/kndp/charts
           config: config.yaml
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
