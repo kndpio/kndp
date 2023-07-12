@@ -2,3 +2,4 @@ owner: kndp
 git-base-url: https://api.github.com/
 git-repo: helm-charts
 git-upload-url: https://uploads.github.com/
+pages-branch: feature/KNDP-30-Helm-Charts-packaging-action
