@@ -33,7 +33,5 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-
-# System Files
-.DS_Store
-Thumbs.db
+/packages/kndp/charts/kndp/charts
+/packages/kndp/charts/kndp/Chart.lock
