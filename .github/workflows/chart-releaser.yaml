@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - release/*
-
 jobs:
   release:
     permissions:
@@ -24,9 +23,8 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.1
         with:
           charts_dir: packages/kndp/charts
-
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
           CR_GIT_REPO: kndp
           CR_OWNER: web-seven
           CR_GIT_BASE_URL: "https://api.github.com/"
