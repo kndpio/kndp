@@ -1,4 +1,4 @@
-owner: myaccount
+owner: kndp
 git-base-url: https://api.github.com/
-package-path: .deploy
 git-repo: helm-charts
+git-upload-url: https://uploads.github.com/
