@@ -1,9 +1,9 @@
 name: Release Charts
 
 on:
-  push:
+  pull_request:
     branches:
-      - feature/KNDP-30-Helm-Charts-packaging-action
+      - release/0.1
 
 jobs:
   release:
@@ -24,8 +24,7 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v3
-      - name: list
-        run: ls -a
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
