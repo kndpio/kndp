@@ -2,6 +2,12 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: worker
+  extraMounts:
+  - hostPath: ./
+    containerPath: /storage
+
+
+- role: control-plane
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
@@ -15,10 +21,3 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-  extraMounts:
-  - hostPath: ./
-    containerPath: /storage
-
-
-- role: control-plane
-
