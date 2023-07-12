@@ -1,0 +1,4 @@
+owner: myaccount
+git-base-url: https://api.github.com/
+package-path: .deploy
+git-repo: helm-charts

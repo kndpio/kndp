@@ -35,4 +35,3 @@ testem.log
 /typings
 /packages/kndp/charts/kndp/charts
 /packages/kndp/charts/kndp/Chart.lock
-/.github/workflows/config.yaml
