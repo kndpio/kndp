@@ -1,9 +1,6 @@
 name: Release Charts
 
-on:
-  pull_request:
-    branches:
-      - release/0.1
+on: [pull_request]
 
 jobs:
   release:
