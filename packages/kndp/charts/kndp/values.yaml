@@ -9,6 +9,7 @@ argo-cd:
       - name: ui
         mountPath: /tmp/extensions
     ingress:
+      enabled: true
       annotations: 
          kubernetes.io/ingress.class: nginx
 
