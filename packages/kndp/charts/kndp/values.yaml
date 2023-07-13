@@ -14,6 +14,7 @@ argo-cd:
         - kndp.local
       annotations: 
          kubernetes.io/ingress.class: nginx
+         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 
 ingress-nginx:
   controller:
