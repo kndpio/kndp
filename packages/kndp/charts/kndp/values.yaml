@@ -8,15 +8,13 @@ argo-cd:
       - name: ui
         hostPath: 
           path: /storage
-      - name: css
-        hostPath:
-          path: /storage/packages/kndp/charts/kndp/files
     volumeMounts:
       - name: ui
         mountPath: /tmp/extensions
         subPath: ./packages/kndp/charts/kndp/files
-      - name: css
+      - name: ui
         mountPath: /shared/app/css
+        subPath: ./packages/kndp/charts/kndp/files
     ingress:
       enabled: true
       hosts:
