@@ -10,12 +10,12 @@ argo-cd:
         mountPath: /tmp/extensions
     ingress:
       enabled: true
-      https: true
       hosts:
         - kndp.local
       annotations: 
          kubernetes.io/ingress.class: nginx
-         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
 ingress-nginx:
   controller:
@@ -42,5 +42,6 @@ ingress-nginx:
       enabled: false
     extraArgs:
       publish-status-address: localhost
+      enable-ssl-passthrough: true
 
  
