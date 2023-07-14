@@ -1,0 +1,37 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:  
+          registry: ghcr.io   
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+         
+  
+    - name: Build OCI Images
+      id: build
+      run: |
+          git diff --name-only HEAD~1..HEAD > build.txt        
+          hash=$(echo ${{ github.sha }})  
+          awk -F "/" '{print $1 "/" $2}' build.txt | uniq | xargs -I{} find {} -type d | xargs -t  -I{} sh -c 'cd "{}" && test -f Dockerfile && sudo docker build -t "{}:${hash}" . &&
+          sudo docker push "${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}/{}:${hash}" '
+
+        
