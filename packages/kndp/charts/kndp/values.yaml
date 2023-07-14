@@ -1,13 +1,22 @@
 argo-cd:
   enabled: true
+  configs:
+    cm:
+       ui.cssurl: "./css/generated.css"
   server:
     volumes: 
       - name: ui
         hostPath: 
           path: /storage
+      - name: css
+        hostPath:
+          path: /storage/packages/kndp/charts/kndp/files
     volumeMounts:
       - name: ui
         mountPath: /tmp/extensions
+        subPath: ./packages/kndp/charts/kndp/files
+      - name: css
+        mountPath: /shared/app/css
     ingress:
       enabled: true
       hosts:
