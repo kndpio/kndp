@@ -10,6 +10,7 @@ argo-cd:
         mountPath: /tmp/extensions
     ingress:
       enabled: true
+      https: true
       hosts:
         - kndp.local
       annotations: 
