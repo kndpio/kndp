@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feature/KNDP-31]    
+    branches: [feature/KNDP-31]
+       
 
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
@@ -30,10 +31,7 @@ jobs:
         run: npm install
 
       - name: Build website
-        run: npm run build
-
-      - name: Start docusaurus
-        run: npm run deploy
+        run: npm run build      
         
       - name: Setup Pages
         uses: actions/configure-pages@v3

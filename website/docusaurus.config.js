@@ -12,7 +12,7 @@ const config = {
 
   // Set the production url of your site here
   url: 'https://github.com/',
-  baseUrl: '/website/',    
+  baseUrl: '/kndp/',    
   organizationName: 'web-seven', // Usually your GitHub org/user name.
   projectName: 'kndp', // Usually your repo name.
   deploymentBranch: "gh-pages",
