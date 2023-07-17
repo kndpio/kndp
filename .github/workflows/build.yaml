@@ -31,8 +31,8 @@ jobs:
     - name: Build OCI Images
       id: build
       run: | 
-          echo "The current working directory is: $(pwd)"
-          cd "$(pwd)"
+          echo "$(ls -a)"  
+          cd /packages/kndp        
           git diff --name-only HEAD~1..HEAD > build.txt
           hash=$(echo ${{ github.sha }})  
           awk -F "/" '{print $1 "/" $2}' build.txt | uniq | xargs -I{} find {} -type d | xargs -t  -I{} sh -c 'cd "{}" && test -f Dockerfile && sudo docker build -t "{}:${hash}" . '

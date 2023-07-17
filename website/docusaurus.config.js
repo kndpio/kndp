@@ -12,13 +12,13 @@ const config = {
 
   // Set the production url of your site here
   url: 'https://github.com/',
-  baseUrl: '/kndp/',    
+  baseUrl: '/website/',    
   organizationName: 'web-seven', // Usually your GitHub org/user name.
   projectName: 'kndp', // Usually your repo name.
   deploymentBranch: "gh-pages",
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: "img/favicon.ico",
+  
    
 
   // Even if you don't use internalization, you can use this field to set useful
