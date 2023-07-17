@@ -33,7 +33,7 @@ jobs:
         run: npm run build
 
       - name: Start docusaurus
-        run: npm run serve
+        run: npm run deploy
         
       - name: Setup Pages
         uses: actions/configure-pages@v3
