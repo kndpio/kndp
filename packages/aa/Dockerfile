@@ -1,1 +1,1 @@
-FROM fnndsc/hello-docker
+FROM alpine:latest 

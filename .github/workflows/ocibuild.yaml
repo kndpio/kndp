@@ -2,69 +2,67 @@ name: Build and Push Docker Images
 
 on:
   push:
-    branches: [feature/KNDP-29]
+    branches:
+      - feature/KNDP-29
 
 defaults:
   run:
     shell: bash
     working-directory: ./
-    
-env:  
-  REGISTRY: ghcr.io  
+
+env:
+  REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
-  
+      contents: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-               
+      - name: Checkout code
+        uses: actions/checkout@v1
 
-    - name: Log in to the Container registry
-      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-      with:  
-          registry: ghcr.io   
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACCESS_TOKEN }}
-         
-  
-    - name: Build OCI Images
-      id: build
-      run: | 
-          git diff --name-only -- HEAD~1..HEAD > build.txt
-          hash=$(echo ${{ github.sha }})  
-          awk -F "/" '{print $1 "/" $2}' build.txt | uniq | xargs -I{} find {} -type d | xargs -t  -I{} sh -c 'cd "{}" && test -f Dockerfile && sudo docker build -t "{}:${hash}" . '
-          ls -a
-          cat build.txt
-    
-    - name: Find and Build Dockerfile
-      id: find-dockerfile
-      run: |
+
+      - name: Save new Dockerfile paths in build.txt
+        run: |
+          git diff --name-only HEAD~1..HEAD > build.txt
+
+      - name: Find and Build Dockerfile
+        id: find-dockerfile
+        run: |
           # Look for the Dockerfile in the repository
           dockerfile_path=$(find . -name "Dockerfile" | head -n 1)
           echo "::set-output name=dockerfile::$dockerfile_path"
-      continue-on-error: true
-    
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=sha
-  
-    - name: Build and push Docker image
-      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-      with:
-        context: .
-        file: ${{ steps.find-dockerfile.outputs.dockerfile }}
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        continue-on-error: true
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha
+
+      - name: Build and Push Docker Images
+        run: |
+          hash="${{ github.sha }}"
+          while IFS= read -r path; do
+            if [[ $path =~ ^(.*\/Dockerfile)$ ]]; then
+              dir=${BASH_REMATCH[1]}
+              # Convert slashes to underscores in the directory name
+              dir_tag=${dir////_}
+              # Get the parent directory of the Dockerfile as the build context
+              build_context=$(dirname "$dir")
+              docker build -t "$REGISTRY/$IMAGE_NAME:$dir_tag-$hash" "$build_context"
+              docker push "$REGISTRY/$IMAGE_NAME:$dir_tag-$hash"
+            fi
+          done < build.txt
