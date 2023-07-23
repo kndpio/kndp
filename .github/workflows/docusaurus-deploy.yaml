@@ -2,15 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feature/KNDP-31]    
+    branches: [feature/KNDP-31]   
 
 
-
-defaults:
-  run:
-    shell: bash
-    working-directory: website
-    
 jobs:
   deploy:
     name: Deploy to GitHub Pages
@@ -29,19 +23,10 @@ jobs:
 
       - name: Build website
         run: npx nx run website:build     
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload entire repository
-          path: website
           
       - name: Deploy to GitHub Pages
         id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./website 
