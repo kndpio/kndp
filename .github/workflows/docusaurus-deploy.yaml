@@ -1,10 +1,13 @@
 name: Deploy to GitHub Pages
-
 on:
   push:
-    branches: [feature/KNDP-31]   
-
-
+    branches: [release/**] 
+    
+defaults:
+  run:
+    shell: bash
+    working-directory: website
+        
 jobs:
   deploy:
     name: Deploy to GitHub Pages
@@ -22,11 +25,11 @@ jobs:
         run: npm install
 
       - name: Build website
-        run: npx nx run website:build     
-          
+        run: npx nx run website:build 
+
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./website 
+          # Build output to publish to the `gh-pages` branch:
+          publish_dir: ./build          
