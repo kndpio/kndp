@@ -2,9 +2,15 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feature/KNDP-31]
+    branches: [feature/KNDP-31]    
 
 
+
+defaults:
+  run:
+    shell: bash
+    working-directory: website
+    
 jobs:
   deploy:
     name: Deploy to GitHub Pages
