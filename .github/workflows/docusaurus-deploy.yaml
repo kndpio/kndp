@@ -3,16 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [feature/KNDP-31]
-       
 
-    # Review gh actions docs if you want to further define triggers, paths, etc
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
-
-
-defaults:
-  run:
-    shell: bash
-    working-directory: website
 
 jobs:
   deploy:
@@ -20,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v1
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
@@ -31,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build website
-        run: npm run build      
+        run: npx nx run website:build     
         
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -40,7 +31,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           # Upload entire repository
-          path: website
+          path: /website
           
       - name: Deploy to GitHub Pages
         id: deployment
