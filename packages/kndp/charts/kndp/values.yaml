@@ -6,7 +6,7 @@ argo-cd:
   server:
     volumes: 
       - name: ui
-        hostPath: 
+        hostPath:
           path: /storage
     volumeMounts:
       - name: ui
@@ -15,14 +15,19 @@ argo-cd:
       - name: ui
         mountPath: /shared/app/css
         subPath: ./packages/kndp/charts/kndp/files
+    extraArgs:
+      - --insecure
+      - --rootpath
+      - /argo-cd
     ingress:
       enabled: true
       hosts:
         - kndp.local
+      paths:
+        - /argo-cd
+
       annotations: 
          kubernetes.io/ingress.class: nginx
-         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
 ingress-nginx:
   controller:
@@ -52,3 +57,38 @@ ingress-nginx:
       enable-ssl-passthrough: true
 
  
+vault:
+  server:
+    enabled: true
+    standalone:
+      enabled: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+
+          custom_response_headers {
+            "default" = {
+              "Content-Security-Policy" = ["frame-ancestors 'self' http://kndp.local/argo-cd"]
+            }
+          }
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+
+     
+
+    ingress:
+      enabled: true
+      hosts:
+      - host: kndp.local
+        paths:
+        - /ui
+        - /v1
+      pathType: ImplementationSpecific
+      annotations: 
+         kubernetes.io/ingress.class: nginx
