@@ -2,6 +2,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [release/**] 
+    paths: [/**]
     
 defaults:
   run:
@@ -25,6 +26,7 @@ jobs:
         run: npm install
 
       - name: Build website
+        working-directory: /
         run: npx nx run website:build 
 
       - name: Deploy to GitHub Pages
