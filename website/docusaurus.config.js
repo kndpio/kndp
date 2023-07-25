@@ -11,7 +11,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://github.com/',
+  url: 'https://kndp.io/',
   baseUrl: '/',    
   organizationName: 'web-seven', // Usually your GitHub org/user name.
   projectName: 'kndp', // Usually your repo name.
