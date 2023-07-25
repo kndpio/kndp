@@ -1,8 +1,8 @@
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [release/**] 
-    paths: [/**]
+    branches:
+      - release/*
     
 defaults:
   run:
