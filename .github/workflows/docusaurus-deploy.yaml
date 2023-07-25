@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - bugfix/KNDP-38-Website-deploy-removes-Helm-charts-index-from-gh-pages
+      - release/*
     
 defaults:
   run:
