@@ -2,7 +2,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - release/*
+      - bugfix/KNDP-38-Website-deploy-removes-Helm-charts-index-from-gh-pages
 jobs:
   release:
     permissions:
