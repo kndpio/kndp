@@ -3,7 +3,7 @@ name: kndp
 description: A Helm chart for Kubernetes
 type: application
 
-version: 0.1.5
+version: 0.1.6
 
 appVersion: "1.16.0"
 
@@ -18,5 +18,5 @@ dependencies:
     version: 1.13.0-rc.0.99.gf19d5d34
     repository: https://charts.crossplane.io/master/
   - name: vault
-    version: "0.25.0"
+    version: "~0.25.0"
     repository: https://helm.releases.hashicorp.com
