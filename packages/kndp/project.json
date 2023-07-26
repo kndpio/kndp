@@ -1,0 +1,70 @@
+{
+    "root": "packages/kndp",
+    "sourceRoot": "charts/kndp",
+    "projectType": "application",
+    "tags": ["scope:paas"],
+    "targets": {
+      "build-extensions": {
+        "executor": "@nrwl/webpack:webpack",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "packages/kndp/charts/kndp/files",
+          "main": "packages/kndp/src/settings.tsx",
+          "tsConfig": "packages/kndp/tsconfig.json",
+          "outputFileName": "extension-development.js",
+          "runtimeChunk": false,
+          "target": "web",
+          "compiler": "tsc",
+          "sourceMap": false,
+          "watch": true
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "extractLicenses": true,
+            "inspect": false,
+            "fileReplacements": []
+          }
+        }
+      },
+      
+      "build-backend": {
+        "executor": "@nrwl/webpack:webpack",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "packages/kndp/charts/kndp/files/backend",
+          "main": "packages/kndp/src/backend.ts",
+          "tsConfig": "packages/kndp/tsconfig.json",
+          "outputFileName": "backend.js",
+          "runtimeChunk": false,
+          "target": "node",
+          "compiler": "tsc",
+          "sourceMap":  false,
+          "watch": true
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "extractLicenses": true,
+            "inspect": false,
+            "fileReplacements": []
+          }
+        }
+      },
+      "serve-backend": {
+        "executor": "@nx/js:node",
+        "options": {
+          "buildTarget": "kndp:build-backend",
+          "watch": true
+        }
+      },
+      "lint": {
+        "executor": "@nrwl/linter:eslint",
+        "outputs": ["{options.outputFile}"],
+        "options": {
+          "lintFilePatterns": ["apps/paas/workspace/src/**/*.ts"]
+        }
+      }
+    }
+  }
+  
