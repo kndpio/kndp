@@ -1,0 +1,64 @@
+name: Charts and website build
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+
+  deploy:
+    permissions:
+      contents: write
+
+    name: Deploy to GitHub Pages and packaging charts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: make index.yaml
+        run:  helm repo index packages/kndp/charts/kndp
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          charts_dir: packages/kndp/charts
+        env:
+          CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
+          CR_GIT_REPO: kndp
+          CR_OWNER: web-seven
+          CR_GIT_BASE_URL: "https://api.github.com/"
+          CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
+          CR_SKIP_EXISTING: false
+          CR_INDEX_PATH: packages/kndp/charts/kndp/index.yaml
+
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build website
+        working-directory: /home/runner/work/kndp/kndp/website
+        run: npx nx run website:build 
+           
+      - name: Include index.yaml in website Build
+        run:  cp packages/kndp/charts/kndp/index.yaml website/build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: /home/runner/work/kndp/kndp/website/build
+
+
