@@ -18,9 +18,9 @@ fi
 ############
 if ! command -v node &> /dev/null; then
     echo "Installing Node.js..."
-    sudo apt update && sudo apt install curl -y
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
-    nvm install node
+    sudo apt install curl -y
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&
+    sudo apt-get install -y nodejs    
 else
     echo "Node.js is already installed. Skipping..."
 fi
@@ -47,15 +47,16 @@ else
     echo "Docker is already installed. Skipping..."
 fi
 
-###########
-### NX  ###
-###########
+#######################################
+### Install NX and create Workspace ###
+#######################################
+
 if ! command -v nx &> /dev/null; then
-    echo "Installing NX..."
-    npm install -g nx
-    npx create-nx-workspace my-org --preset=ts --no-nx-cloud --no-nx-cache --nx-cloud=false -y
+    echo "Installing NX..."    
+    npx create-nx-workspace  
+    npm install -g nx 
 else
-    echo "NX is already installed. Skipping..."
+    echo "NX is already installed."
 fi
 
 ###########################
@@ -67,19 +68,7 @@ if ! command -v kind &> /dev/null; then
     chmod +x ./kind
     sudo mv ./kind /usr/local/bin/kind
 else
-    echo "Kind is already installed. Skipping..."
-fi
-
-################################
-### install and setup KUBECTL ##
-################################
-if ! command -v kubectl &> /dev/null; then
-    echo "Installing kubectl..."
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    chmod +x kubectl
-    sudo mv kubectl /usr/local/bin/
-else
-    echo "kubectl is already installed. Skipping..."
+    echo "KNDP basic tools are installed."
 fi
 
 ##########################################
@@ -111,7 +100,7 @@ nodes:
     protocol: TCP
 EOF
 
-kind create cluster --config kind-config.yaml
+sudo kind create cluster --config kind-config.yaml
 
 ##########
 ## HELM ##
@@ -123,20 +112,16 @@ if ! command -v helm &> /dev/null; then
     ./get_helm.sh
     rm get_helm.sh  # Clean up the installation script
 else
-    echo "Helm is already installed. Skipping..."
+    echo "Installed. Skipping..."
 fi
 
-#################
-# pull kndp chart
-#################
-# pulling 0.1.6 for testing 
-helm pull https://github.com/web-seven/kndp/releases/download/kndp-0.1.6/kndp-0.1.6.tgz
+###################
+# pull KNDP CHART #
+###################
 
-if [ -s "kndp-0.1.6.tgz" ]; then
-    echo "Helm chart downloaded successfully, unpacking"
-    tar -xzf kndp-0.1.6.tgz -C . && rm kndp-0.1.6.tgz
-else
-    echo "Helm chart is empty or download failed."
-fi
+helm repo add kndp https://kndp.io
+helm repo up
+helm install kndp kndp/kndp
 
-helm install kndp kndp
+
+echo "Installation succeded! Kind reminder to to log out and log back in to apply changes and run Docker without 'sudo' "
