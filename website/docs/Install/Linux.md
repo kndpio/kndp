@@ -15,11 +15,12 @@
   
 - 🔒🔑 Administrative privileges. Ensure you have administrative privileges to execute certain commands (e.g., sudo).
 
-# Run the scrypt:
+# Run the scrypt by:
 
 
     sudo apt update && sudo apt install curl && curl -sSf https://raw.githubusercontent.com/web-seven/kndp/release/0.1/scripts/install.sh | bash
-       
+
+#### Note! It will install in `YOUR CURRENT WORKING DIRECTORY` all necesary tools and create a new NX Workspace.       
  
 #
 
@@ -31,7 +32,7 @@ The script checks if Git is installed and installs it if not. Git is a version c
 
 ### Node.js
 
-If Node.js is not installed, the script installs it using `nvm` (Node Version Manager). NVM allows you to manage multiple Node.js versions on the same system.
+If Node.js is not installed, the script installs it. 
 
 ### Docker
 

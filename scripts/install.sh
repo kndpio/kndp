@@ -53,7 +53,7 @@ fi
 
 if ! command -v nx &> /dev/null; then
     echo "Installing NX..."    
-    npx create-nx-workspace  
+    npx create-nx-workspace --skipGit ./
     npm install -g nx 
 else
     echo "NX is already installed."
