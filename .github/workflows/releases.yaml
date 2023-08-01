@@ -2,7 +2,7 @@ name: Charts and website build
 on:
   push:
     branches:
-      - release/*
+      - bugfix/KNDP-20-applications-secrets-management
 
 jobs:
 
@@ -24,13 +24,15 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: make index.yaml
-        run:  helm repo index packages/kndp/charts/kndp
+      - name: Chart releaser trigger 
+        run: |
+          echo "Trigger" > packages/kndp/charts/kndp/trigger.txt
+          helm repo index packages/kndp/charts/kndp
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
-          charts_dir: packages/kndp/charts
+          charts_dir: packages/kndp/charts/kndp
         env:
           CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
           CR_GIT_REPO: kndp
