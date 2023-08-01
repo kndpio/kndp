@@ -32,7 +32,7 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
-          charts_dir: packages/kndp/charts/kndp
+          charts_dir: packages/kndp/charts
         env:
           CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
           CR_GIT_REPO: kndp
