@@ -49,8 +49,8 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
-             cat packages/kndp/charts/kndp/index.yaml
+        run:    cat packages/kndp/charts/kndp/index.yaml
+                npm install
 
       - name: Build website
         working-directory: /home/runner/work/kndp/kndp/website
