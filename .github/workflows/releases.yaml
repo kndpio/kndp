@@ -52,9 +52,13 @@ jobs:
       - name: Build website
         working-directory: /home/runner/work/kndp/kndp/website
         run: npx nx run website:build 
+        
+      - name: create CNAME file with kndp.io domain       
+        run: echo kndp.io > website/build/CNAME
            
       - name: Include index.yaml in website Build
         run:  cp packages/kndp/charts/kndp/index.yaml website/build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
