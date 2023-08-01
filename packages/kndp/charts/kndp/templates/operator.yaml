@@ -23,7 +23,6 @@ spec:
         volumeMounts:
         - name: operator
           mountPath: "/.platform/stacks"  
-          subPath: "packages/operator/.platform/stacks"
         ports:
         - containerPort: 8080
       volumes:
