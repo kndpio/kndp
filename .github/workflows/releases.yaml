@@ -53,7 +53,8 @@ jobs:
         working-directory: /home/runner/work/kndp/kndp/website
         run: npx nx run website:build 
            
-
+      - name: Include index.yaml in website Build
+        run:  cp .cr-index/index.yaml website/build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
