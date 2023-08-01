@@ -17,11 +17,6 @@ module.exports = {
   },
 };
 
-plugins: [
-  // ... other plugins ...
-  require.resolve('./src/plugins/capitalizeSidebarItems.js'),
-]
-
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
