@@ -27,7 +27,7 @@ jobs:
       - name: Chart releaser trigger 
         run: |
           echo "Trigger" > packages/kndp/charts/kndp/trigger.txt
-          helm repo index packages/kndp/charts/kndp
+
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
@@ -40,7 +40,6 @@ jobs:
           CR_GIT_BASE_URL: "https://api.github.com/"
           CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
           CR_SKIP_EXISTING: true
-          CR_INDEX_PATH: packages/kndp/charts/kndp/index.yaml
 
 
       - name: Setup Node.js environment
