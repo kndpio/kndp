@@ -4,8 +4,15 @@ on:
     branches:
       - release/*
 
-jobs:
+defaults:
+  run:
+    shell: bash   
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}    
+
+jobs:
   deploy:
     permissions:
       contents: write
@@ -65,4 +72,17 @@ jobs:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: /home/runner/work/kndp/kndp/website/build
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
 
+      - name: extract and build Docker images
+        id: build
+        run: |
+              cd /home/runner/work/kndp/kndp/
+              git diff --name-only HEAD~1..HEAD > build.txt
+              export hash=$(echo "${{ github.sha }}")
+              cat build.txt | xargs -I {} dirname {} | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq | xargs -I{} find {} -type f -name "Dockerfile" | xargs -I{} bash -c 'context=$(dirname "{}"); dir=$(dirname "{}" | awk -F"/" "{ print \$2 }"); docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash" "$context" && docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash"'
