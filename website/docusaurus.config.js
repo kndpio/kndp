@@ -5,17 +5,13 @@ module.exports = {
       disableSwitch: false,
       respectPrefersColorScheme: false,
     },
-  },
-};
-
-module.exports = {
-  themeConfig: {
     tableOfContents: {
       minHeadingLevel: 2,
       maxHeadingLevel: 5,
     },
   },
 };
+
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
