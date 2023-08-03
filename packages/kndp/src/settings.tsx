@@ -45,7 +45,7 @@ const Settings: React.FC = () => {
 
     console.log(data)
 
-    fetch('http://localhost:3000/generate-css', {
+    fetch('http://localhost:3000/profile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,6 +170,6 @@ const Settings: React.FC = () => {
       Settings,
       'Edit',
       '/edit',
-      'fa-pen-ruler'
+      'fa-sliders'
     );
   })(window);

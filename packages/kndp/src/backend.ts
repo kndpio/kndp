@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 app.use(cors()); 
 
-app.post('/generate-css', (req: Request, res: Response) => {
+app.post('/profile', (req: Request, res: Response) => {
   const { logo, main_color, background_color } = req.body;
 
   const generatedCSS = `
@@ -50,23 +50,6 @@ app.post('/generate-css', (req: Request, res: Response) => {
     }
   });
 });
-
-
-
-app.get('/generated-css', (req: Request, res: Response) => {
-  const filePath = './packages/kndp/charts/kndp/files/generated.css';
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Error reading CSS file' });
-    } else {
-      console.log('CSS file read successfully!');
-      res.send(data);
-    }
-  });
-});
-
 
 app.listen(port, () => {
   console.log(`Backend API listening at http://localhost:${port}`);
