@@ -20,6 +20,13 @@ jobs:
     name: Deploy to GitHub Pages and packaging charts
     runs-on: ubuntu-latest
     steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}   
+           
       - name: Checkout
         uses: actions/checkout@v1
 
@@ -27,7 +34,6 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@github.com"
-
       - name: Install Helm
         uses: azure/setup-helm@v3
 
@@ -46,8 +52,15 @@ jobs:
           CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
           CR_SKIP_EXISTING: false
           CR_INDEX_PATH: packages/kndp/charts/kndp/index.yaml
-
-
+      
+      - name: extract and build Docker images
+        id: build
+        run: |
+              cd /home/runner/work/kndp/kndp/
+              git diff --name-only HEAD~1..HEAD > build.txt
+              export hash=$(echo "${{ github.sha }}")
+              cat build.txt | xargs -I {} dirname {} | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq | xargs -I{} find {} -type f -name "Dockerfile" | xargs -I{} bash -c 'context=$(dirname "{}"); dir=$(dirname "{}" | awk -F"/" "{ print \$2 }"); docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash" "$context" && docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash"'
+      
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
@@ -71,18 +84,3 @@ jobs:
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: /home/runner/work/kndp/kndp/website/build
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: extract and build Docker images
-        id: build
-        run: |
-              cd /home/runner/work/kndp/kndp/
-              git diff --name-only HEAD~1..HEAD > build.txt
-              export hash=$(echo "${{ github.sha }}")
-              cat build.txt | xargs -I {} dirname {} | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq | xargs -I{} find {} -type f -name "Dockerfile" | xargs -I{} bash -c 'context=$(dirname "{}"); dir=$(dirname "{}" | awk -F"/" "{ print \$2 }"); docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash" "$context" && docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash"'
