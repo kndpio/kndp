@@ -3,12 +3,12 @@ entries:
   a1:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-08-04T13:48:56.491637816Z"
+    created: "2023-08-04T13:54:23.832325781Z"
     description: A Helm chart for Kubernetes
-    digest: 2585b9fcd90194ed171a528e06496a29b24d898329ae866a9610243c24f80f16
+    digest: fe8bc07dbce78c6381300ad2886435cd7693069f7fc795a376c9fce8608253e3
     name: a1
     type: application
     urls:
     - https://ghcr.io/web-seven/kndp/a1-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-04T13:48:56.4905099Z"
+generated: "2023-08-04T13:54:23.831698276Z"
