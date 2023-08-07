@@ -25,7 +25,7 @@ app.post('/profile', (req: Request, res: Response) => {
     top: 30px;
     width: 40px; 
     height: 40px; 
-    background: url("${logo}");
+    background: url("${logo}"); 
     background-size: 40px 40px;
   }
     .sidebar {  
