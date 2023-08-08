@@ -16,7 +16,7 @@ spec:
       labels:
         {{- include "operator.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: cluster-operator
+      serviceAccountName: "{{ .Values.serviceAccount }}"
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag | default .Chart.AppVersion }}"
@@ -24,6 +24,7 @@ spec:
           volumeMounts:
             - name: clusters
               mountPath: .platform/clusters
+              subPath: ./packages/stack/stack-operator/.platform/stacks
       volumes:
         - name: clusters
           hostPath:

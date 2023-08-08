@@ -1,4 +1,3 @@
-# rbac-full-access.yaml
 
 apiVersion: v1
 kind: ServiceAccount

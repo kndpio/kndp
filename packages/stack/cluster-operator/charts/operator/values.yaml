@@ -1,0 +1,7 @@
+
+replicaCount: 1
+container:
+  image:
+    repository: cluster-operator
+    pullPolicy: IfNotPresent
+serviceAccount: cluster-operator
