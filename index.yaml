@@ -22,6 +22,6 @@ entries:
     name: kndp
     type: application
     urls:
-    - kndp.io/kndp-0.1.6.tgz
+    - kndp-0.1.6.tgz
     version: 0.1.6
 generated: "2023-08-08T09:10:35.522758848Z"
