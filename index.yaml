@@ -2,10 +2,10 @@ apiVersion: v1
 entries:
   a1:
   - apiVersion: v2
-    appVersion: "1234"
-    created: "2023-08-08T13:14:54.221370175Z"
+    appVersion: 865cd8aaee950d52f5c1360d719f393e02b5f3b8
+    created: "2023-08-08T13:17:51.830826773Z"
     description: A Helm chart for Kubernetes
-    digest: 110f47e0428737ce55bccf8fd7d3c850e328ff944158d92329d57c4340ce2beb
+    digest: 5c18fe4773bf2b8ae7749f2317e1e426735ba0cab59f4f805cdbeeb13fd80265
     name: a1
     type: application
     urls:
@@ -13,8 +13,8 @@ entries:
     version: 0.1.0
   kndp:
   - apiVersion: v2
-    appVersion: "1234"
-    created: "2023-08-08T13:14:54.246377091Z"
+    appVersion: 865cd8aaee950d52f5c1360d719f393e02b5f3b8
+    created: "2023-08-08T13:17:51.872214771Z"
     dependencies:
     - name: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
@@ -29,10 +29,10 @@ entries:
       repository: https://helm.releases.hashicorp.com
       version: ~0.25.0
     description: A Helm chart for Kubernetes
-    digest: 318c00d43d036068556a497f4cd23a93f90233361132fd406ab84a921eae734b
+    digest: d985df399212a8869610df12f3201226df0866ab2dfc6f54c44c2bbed3193a7f
     name: kndp
     type: application
     urls:
     - https://github.com/web-seven/kndp/releases/tag/kndp-0.1.6/kndp-0.1.7.tgz
     version: 0.1.7
-generated: "2023-08-08T13:14:54.220664463Z"
+generated: "2023-08-08T13:17:51.830070327Z"
