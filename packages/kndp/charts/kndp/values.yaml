@@ -19,7 +19,7 @@ argo-cd:
            mountPath: /tmp/extensions
         command: ["/bin/sh", "-c"]
         args: 
-          - cp -r /packages /tmp/extensions/ && node /tmp/extensions/packages/backend/backend.js
+          - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
 
     volumes: 
       - name: extensions
