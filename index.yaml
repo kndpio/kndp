@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: "2023-08-09T07:38:45.946047029Z"
+entries:
+  a1:
+  - apiVersion: v2
+    appVersion: a4f97288a58bb287d5087c053bdffaa0fcd621c3
+    created: "2023-08-09T09:58:46.860543309Z"
+    description: A Helm chart for Kubernetes
+    digest: f4ed5115c968954278691362c87bd3d3119d306960a46823adca8b94e9baf435
+    name: a1
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/tag/kndp-0.1.6/a1-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-08-09T09:58:46.859057264Z"
