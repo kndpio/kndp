@@ -15,9 +15,7 @@ argo-cd:
       - name: ui
         mountPath: /shared/app/css
         subPath: ./packages/kndp/charts/kndp/files
-      - name: ui
-        mountPath: /tmp/extensions/operator
-        subPath: ./packages/kndp/charts/kndp/list
+
     extraArgs:
       - --insecure
       - --rootpath
