@@ -18,6 +18,7 @@ argo-cd:
       - name: ui
         mountPath: /tmp/extensions/vault
         subPath: ./packages/kndp/charts/kndp/extension-vault
+
     extraArgs:
       - --insecure
       - --rootpath
