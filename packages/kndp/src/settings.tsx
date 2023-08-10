@@ -1,11 +1,10 @@
-
-const {useState} = window.React;
+const { useState } = window.React;
 
 const Settings: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState('#ababab');
   const [secondColor, setSecondColor] = useState('#242e47');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [logo, setLogo] =  useState<string>(''); 
+  const [logo, setLogo] = useState<string>('');
 
   const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedColor(event.target.value);
@@ -43,7 +42,7 @@ const Settings: React.FC = () => {
       background_color: secondColor,
     };
 
-    console.log(data)
+    console.log(data);
 
     fetch('http://localhost:3000/profile', {
       method: 'POST',
@@ -61,8 +60,8 @@ const Settings: React.FC = () => {
       });
   };
   const handleReload = () => {
-    handleClick(); 
-    location.reload(); 
+    handleClick();
+    location.reload();
   };
   return (
     <div
@@ -158,18 +157,18 @@ const Settings: React.FC = () => {
           fontSize: '16px',
           fontWeight: 'bold',
         }}
-        >
-          Submit
-        </button>
-      </div>
-    );
-  };
-  
-  ((window: any) => {
-    window?.extensionsAPI?.registerSystemLevelExtension(
-      Settings,
-      'Edit',
-      '/edit',
-      'fa-sliders'
-    );
-  })(window);
+      >
+        Submit
+      </button>
+    </div>
+  );
+};
+
+((window: any) => {
+  window?.extensionsAPI?.registerSystemLevelExtension(
+    Settings,
+    'Profile',
+    '/profile',
+    'fa-sliders'
+  );
+})(window);

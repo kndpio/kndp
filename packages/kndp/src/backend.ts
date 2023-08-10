@@ -36,7 +36,9 @@ app.post('/profile', (req: Request, res: Response) => {
     }
   `;
 
-  const outputDir = './packages/kndp/charts/kndp/files'; 
+  process.env.PATHS = '/shared/app/css';
+  
+  const outputDir = process.env.PATHS ; 
   const fileName = 'generated.css';
   const filePath = path.join(outputDir, fileName); 
 
