@@ -1,0 +1,38 @@
+apiVersion: v1
+entries:
+  a1:
+  - apiVersion: v2
+    appVersion: 8aa670201ea0701525c0b3cce777a3f9e4ba02b4
+    created: "2023-08-10T11:39:48.135877905Z"
+    description: A Helm chart for Kubernetes
+    digest: 7092bde151098b68bba12c96075c57d6b92a2eb48d5729775710d3f835e66d48
+    name: a1
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.7/kndp-0.1.7.tgz/a1-0.1.0.tgz
+    version: 0.1.0
+  kndp:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-08-10T11:39:48.155737646Z"
+    dependencies:
+    - name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: ~4.7.1
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: ~5.38.0
+    - name: crossplane
+      repository: https://charts.crossplane.io/master/
+      version: 1.13.0-rc.0.99.gf19d5d34
+    - name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: ~0.25.0
+    description: A Helm chart for Kubernetes
+    digest: b453c8576e545400f258ddb8ff774cd76c28c3f2f29aefa1efe9055ae36833e3
+    name: kndp
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.7/kndp-0.1.7.tgz/kndp-0.1.7.tgz
+    version: 0.1.7
+generated: "2023-08-10T11:39:48.135179293Z"
