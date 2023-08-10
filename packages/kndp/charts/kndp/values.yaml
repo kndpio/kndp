@@ -7,7 +7,7 @@ argo-cd:
     restartPolicy: Never
     extraContainers:
       - name: package
-        image: packages:0.1.0
+        image: kndp:0.1.0
         env:
           - name: "PATHS"
             value: "/shared/app/css"
