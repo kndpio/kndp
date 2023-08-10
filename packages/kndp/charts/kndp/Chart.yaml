@@ -23,3 +23,4 @@ dependencies:
   - name: cluster-operator
     version: "~0.1.0"
     repository: https://kndp.io
+
