@@ -1,0 +1,35 @@
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cluster-operator
+  namespace: default
+
+---
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-operator-role
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-operator-rolebinding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: cluster-operator
+  namespace: default
+roleRef:
+  kind: Role
+  name: cluster-operator-role
+  apiGroup: rbac.authorization.k8s.io
+

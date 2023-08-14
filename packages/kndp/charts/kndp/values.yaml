@@ -10,11 +10,15 @@ argo-cd:
           path: /storage
     volumeMounts:
       - name: ui
-        mountPath: /tmp/extensions
+        mountPath: /tmp/extensions/ui
         subPath: ./packages/kndp/charts/kndp/files
       - name: ui  
         mountPath: /shared/app/css
         subPath: ./packages/kndp/charts/kndp/files
+      - name: ui
+        mountPath: /tmp/extensions/vault
+        subPath: ./packages/kndp/charts/kndp/extension-vault
+
     extraArgs:
       - --insecure
       - --rootpath

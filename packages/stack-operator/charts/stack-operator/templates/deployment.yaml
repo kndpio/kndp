@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stack-operator.fullname" . }}
+  labels:
+    {{- include "stack-operator.labels" . | nindent 4 }}
+spec:
+
+  selector:
+    matchLabels:
+      {{- include "stack-operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "stack-operator.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: "{{.Values.serviceAccount}}"
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: stacks
+              mountPath: .platform/stacks
+              subPath: ./packages/stack/stack-operator/.platform/stacks
+      volumes:
+        - name: stacks
+          hostPath:
+            path: /storage
+            type: Directory

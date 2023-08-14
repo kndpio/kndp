@@ -20,4 +20,7 @@ dependencies:
   - name: vault
     version: "~0.25.0"
     repository: https://helm.releases.hashicorp.com
-    
+  - name: cluster-operator
+    version: "~0.1.0"
+    repository: https://kndp.io
+
