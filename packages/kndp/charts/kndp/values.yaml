@@ -4,6 +4,7 @@ argo-cd:
     cm:
        ui.cssurl: "./css/generated.css"
   server:
+
     restartPolicy: Never
     extraContainers:
       - name: package
@@ -29,6 +30,7 @@ argo-cd:
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions
+
         mountPath: /shared/app/css
 
     extraArgs:
@@ -44,7 +46,7 @@ argo-cd:
 
       annotations: 
          kubernetes.io/ingress.class: nginx
-
+ 
 ingress-nginx:
   controller:
     updateStrategy:
