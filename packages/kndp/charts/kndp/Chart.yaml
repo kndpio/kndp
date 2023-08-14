@@ -19,7 +19,8 @@ dependencies:
     repository: https://charts.crossplane.io/master/
   - name: vault
     version: "~0.25.0"
-    repository: https://helm.releases.hashicorp.com
-  - name: stack-operator
+    repository: https://kndp.io
+  - name: cluster-operator
     version: "~0.1.0"
     repository: https://kndp.io
+
