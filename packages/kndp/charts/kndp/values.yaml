@@ -25,6 +25,7 @@ argo-cd:
       - name: extensions
         emptyDir: {}
     volumeMounts:
+
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions

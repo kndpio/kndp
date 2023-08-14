@@ -1,4 +1,9 @@
-#
+---
+id: linux
+title: KNDP for Linux
+sidebar_posiion: 2
+---
+
 # <div align="center">   Install KNDP  </div>
 
 
