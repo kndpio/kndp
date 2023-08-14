@@ -1,4 +1,4 @@
-name: Charts and website build
+name: Release preaparation
 on:
   push:
     branches:
@@ -6,27 +6,28 @@ on:
 
 defaults:
   run:
-    shell: bash   
+    shell: bash
+    working-directory: /home/runner/work/kndp/kndp
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}    
 
 jobs:
-  deploy:
+
+  build-and-pack:
+    name: Build and pack
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
-    name: Deploy to GitHub Pages and packaging charts
-    runs-on: ubuntu-latest
     steps:
-      - name: Log in to the Container registry
+      - name: CR authentication
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.ACCESS_TOKEN }}   
-           
+          password: ${{ secrets.ACCESS_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v1
 
@@ -34,53 +35,88 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@github.com"
+
       - name: Install Helm
         uses: azure/setup-helm@v3
-
-      - name: make index.yaml
-        run:  helm repo index packages/kndp/charts/kndp
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
-        with:
-          charts_dir: packages/kndp/charts
         env:
-          CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
-          CR_GIT_REPO: kndp
-          CR_OWNER: web-seven
-          CR_GIT_BASE_URL: "https://api.github.com/"
-          CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
-          CR_SKIP_EXISTING: false
-          CR_INDEX_PATH: packages/kndp/charts/kndp/index.yaml
-      
-      - name: extract and build Docker images
-        id: build
-        run: |
-              cd /home/runner/work/kndp/kndp/
-              git diff --name-only HEAD~1..HEAD > build.txt
-              export hash=$(echo "${{ github.sha }}")
-              cat build.txt | xargs -I {} dirname {} | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq | xargs -I{} find {} -type f -name "Dockerfile" | xargs -I{} bash -c 'context=$(dirname "{}"); dir=$(dirname "{}" | awk -F"/" "{ print \$2 }"); docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash" "$context" && docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/$dir:$hash"'
-      
-      - name: Setup Node.js environment
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Prepare metadata
+        id: metadata
+        run: |
+          git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq > build.txt;
+
+      - name: Build images
+        id: build
+        run: cat build.txt | xargs -I{} bash -c '[ -f {}/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} {} && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} || true'
+
+      - name: Package with commit sha
+        id: pack-sha
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${chart_version} || true';
+
+      - name: Package
+        id: pack
+        run: |
+          cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u -d ./all-charts/${chart_name}-${chart_version} || true'
 
       - name: Install dependencies
         run: npm install
 
       - name: Build website
         working-directory: /home/runner/work/kndp/kndp/website
-        run: npx nx run website:build 
-        
-      - name: create CNAME file with kndp.io domain       
-        run: echo kndp.io > website/build/CNAME
-           
-      - name: Include index.yaml in website Build
-        run:  cp packages/kndp/charts/kndp/index.yaml website/build
+        run: npx nx run website:build
 
+
+      - name: Install chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          install_only: true
+
+      - name: Run chart-releaser
+        working-directory: /home/runner/work/kndp/kndp
+        run: |
+          if [ -d "$CR_PACKAGE_PATH" ]; then
+            for subdir in "$CR_PACKAGE_PATH"/*; do
+              if [ -d "$subdir" ]; then
+                cr upload --package-path "$subdir"
+              fi
+            done
+          else
+            echo "No charts to release, skipping"
+          fi
+        env:
+          CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
+          CR_OWNER: web-seven
+          CR_GIT_REPO: kndp
+          CR_GIT_BASE_URL: "https://api.github.com/"
+          CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
+          CR_PACKAGE_PATH: all-charts
+          CR_SKIP_EXISTING: true
+
+
+
+
+      - name: Create index.yaml
+        working-directory: /home/runner/work/kndp/kndp
+        run: |
+            if [ -d "all-charts" ]; then
+            helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/"
+            cp all-charts/index.yaml /home/runner/work/kndp/kndp/website/build/
+            else
+              echo "No all-charts directory to create index.yaml, skipping"
+            fi
+        
+      - name: create CNAME file with kndp.io domain
+        run: echo kndp.io > website/build/CNAME
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: /home/runner/work/kndp/kndp/website/build
+
