@@ -2,7 +2,7 @@ name: Release preaparation
 on:
   push:
     branches:
-      - release/*
+      - bugfix/KNDP-45-merge-new-created-index-with-gh-pages-index
 
 defaults:
   run:
@@ -105,7 +105,7 @@ jobs:
         working-directory: /home/runner/work/kndp/kndp
         run: |
             if [ -d "all-charts" ]; then
-            helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/"
+            helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/" --merge https://github.com/web-seven/kndp/blob/gh-pages/index.yaml
             cp all-charts/index.yaml /home/runner/work/kndp/kndp/website/build/
             else
               echo "No all-charts directory to create index.yaml, skipping"

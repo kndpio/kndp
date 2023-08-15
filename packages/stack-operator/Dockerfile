@@ -10,3 +10,4 @@ COPY --from=build /operator /
 COPY --from=alpine/k8s:1.24.16 /usr/bin/kubectl /usr/local/bin/kubectl
 ENTRYPOINT [ "/operator" ]
 EXPOSE 8080
+ 
