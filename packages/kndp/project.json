@@ -4,6 +4,29 @@
     "projectType": "application",
     "tags": ["scope:paas"],
     "targets": {
+      "build-list": {
+        "executor": "@nrwl/webpack:webpack",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "packages/kndp/charts/kndp/list",
+          "main": "packages/kndp/src/list.tsx",
+          "tsConfig": "packages/kndp/tsconfig.json",
+          "outputFileName": "extension-list.js",
+          "runtimeChunk": false,
+          "target": "web",
+          "compiler": "tsc",
+          "sourceMap": false,
+          "watch": true
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "extractLicenses": true,
+            "inspect": false,
+            "fileReplacements": []
+          }
+        }
+      },
       "build-extensions": {
         "executor": "@nrwl/webpack:webpack",
         "outputs": ["{options.outputPath}"],
