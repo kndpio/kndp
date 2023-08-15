@@ -4,17 +4,35 @@ argo-cd:
     cm:
        ui.cssurl: "./css/generated.css"
   server:
+
+    restartPolicy: Never
+    extraContainers:
+      - name: package
+        image: kndp:0.1.0
+        env:
+          - name: "PATHS"
+            value: "/shared/app/css"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+         - name: extensions
+           mountPath: /shared/app/css
+         - name: extensions
+           mountPath: /tmp/extensions
+        command: ["/bin/sh", "-c"]
+        args: 
+          - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
+
     volumes: 
-      - name: ui
-        hostPath:
-          path: /storage
+      - name: extensions
+        emptyDir: {}
     volumeMounts:
-      - name: ui
+
+      - name: extensions
         mountPath: /tmp/extensions
-        subPath: ./packages/kndp/charts/kndp/files
-      - name: ui
+      - name: extensions
+
         mountPath: /shared/app/css
-        subPath: ./packages/kndp/charts/kndp/files
+
     extraArgs:
       - --insecure
       - --rootpath
@@ -28,7 +46,7 @@ argo-cd:
 
       annotations: 
          kubernetes.io/ingress.class: nginx
-
+ 
 ingress-nginx:
   controller:
     updateStrategy:

@@ -2,18 +2,23 @@
   "name": "@./source",
   "version": "0.0.0",
   "license": "MIT",
-  "private": true, 
+  "private": true,
   "dependencies": {
+    "@cmfcmf/docusaurus-search-local": "^1.1.0",
     "@docusaurus/core": "2.4.1",
     "@docusaurus/preset-classic": "2.4.1",
+    "@easyops-cn/docusaurus-search-local": "^0.35.0",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.2.1",
+    "cors": "^2.8.5",
     "docusaurus": "^1.14.7",
+    "docusaurus-lunr-search": "^2.3.2",
     "prism-react-renderer": "^1.3.5",
     "react-dom": "^17.0.2",
     "cors": "^2.8.5",
     "react": "^17.0.2",
     "react-router-dom": "^6.14.2"
+    "react-medium-image-zoom": "^5.1.7"
   },
   "devDependencies": {
     "@nrwl/webpack": "16.5.3",
