@@ -97,7 +97,9 @@ jobs:
 
 
       - name: Pulling last version of index.yaml 
-        working-directory: /home/runner/work/kndp/kndp/all-charts
+
+        working-directory: /home/runner/work/kndp/kndp/website/build
+
         run: curl -O -L "https://github.com/web-seven/kndp/raw/gh-pages/index.yaml"
 
 
@@ -105,8 +107,11 @@ jobs:
         working-directory: /home/runner/work/kndp/kndp
         run: |
             if [ -d "all-charts" ]; then
-            helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/" --merge /home/runner/work/kndp/kndp/all-charts/index.yaml
-            cp all-charts/index.yaml /home/runner/work/kndp/kndp/website/build/
+
+            helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/" --merge /home/runner/work/kndp/kndp/website/build/index.yaml
+            rm /home/runner/work/kndp/kndp/website/build/index.yaml
+            cp all-charts/index.yaml /home/runner/work/kndp/kndp/website/build
+
             else
               echo "No all-charts directory to create index.yaml, skipping"
             fi
