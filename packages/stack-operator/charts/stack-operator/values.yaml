@@ -1,10 +1,10 @@
 replicaCount: 1
 image:
-  repository: stacks-operator
+  repository: stack-operator
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
   port: 8080
 
-serviceAccount: stacks-operator
+serviceAccount: stack-operator
