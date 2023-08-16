@@ -2,7 +2,7 @@
     "root": "packages/kndp",
     "sourceRoot": "charts/kndp",
     "projectType": "application",
-    "tags": ["scope:paas"],
+    "tags": ["scope:kndp"],
     "targets": {
       "build-list": {
         "executor": "@nrwl/webpack:webpack",
