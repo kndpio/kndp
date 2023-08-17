@@ -100,13 +100,13 @@ nodes:
     protocol: TCP
 EOF
 
-sudo kind create cluster --config kind-config.yaml
+kind create cluster --name kndp --config kind-config.yaml
 
 ##########
 ## HELM ##
 ##########
+echo "Installing Helm..."
 if ! command -v helm &> /dev/null; then
-    echo "Installing Helm..."
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
     chmod 700 get_helm.sh
     ./get_helm.sh
@@ -120,8 +120,5 @@ fi
 ###################
 
 helm repo add kndp https://kndp.io
-helm repo up
+helm repo up kndp
 helm install kndp kndp/kndp
-
-
-echo "Installation succeded! Kind reminder to to log out and log back in to apply changes and run Docker without 'sudo' "
