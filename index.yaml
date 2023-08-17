@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  cluster-operator:
+  - apiVersion: v2
+    appVersion: a011ac6e7cfb010fd596d5b1f5f817f5a6e8f8c3
+    created: "2023-08-17T07:41:42.240970341Z"
+    description: A Helm chart for Kubernetes
+    digest: 0084351309f980a60b3eba200be9a5bdcb4b1d0a313097fa5a0a438f1a01e71f
+    name: cluster-operator
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/cluster-operator-0.1.0/cluster-operator-0.1.0.tgz
+    version: 0.1.0
   stack-operator:
   - apiVersion: v2
     appVersion: 7a8ae345cbc1be9b59bf059810936370a8f3030a
@@ -11,4 +22,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-16T14:00:46.707627747Z"
+generated: "2023-08-17T07:41:42.240481738Z"
