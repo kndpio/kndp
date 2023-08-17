@@ -3,7 +3,7 @@ name: kndp
 description: A Helm chart for Kubernetes
 type: application
 
-version: 0.1.9
+version: 0.1.10
 
 appVersion: "1.16.0"
 
@@ -22,7 +22,7 @@ dependencies:
     repository: https://helm.releases.hashicorp.com
   - name: cluster-operator
     version: "~0.1.0"
-    repository: https://kndp.io
+    repository: file://../../../cluster-operator/charts/operator
   - name: stack-operator
     version: "~0.1.0"
-    repository: https://kndp.io
+    repository: file://../../../stack-operator/charts/stack-operator
