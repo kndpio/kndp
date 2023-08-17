@@ -1,4 +1,5 @@
-
+autoscaling:
+  enabled: false
 replicaCount: 1
 container:
   image:
