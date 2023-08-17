@@ -13,6 +13,35 @@ entries:
     version: 0.1.0
   kndp:
   - apiVersion: v2
+    appVersion: b4526ca3e872bc43097ee9193337ac9fa4ab32bd
+    created: "2023-08-17T15:08:34.386585564Z"
+    dependencies:
+    - name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: ~4.7.1
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: ~5.38.0
+    - name: crossplane
+      repository: https://charts.crossplane.io/master/
+      version: 1.13.0-rc.0.99.gf19d5d34
+    - name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: ~0.25.0
+    - name: cluster-operator
+      repository: https://kndp.io
+      version: ~0.1.0
+    - name: stack-operator
+      repository: https://kndp.io
+      version: ~0.1.0
+    description: A Helm chart for Kubernetes
+    digest: fbb066dd7615be6f117e1b71e1b52395e00fe75456dc9a8b25e2dd00ae858db2
+    name: kndp
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.9/kndp-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
     appVersion: da3cd20073a1cc08873b0db203fe06928e1db3fe
     created: "2023-08-17T14:43:21.842747504Z"
     dependencies:
@@ -81,4 +110,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-17T14:43:21.816910864Z"
+generated: "2023-08-17T15:08:34.3570262Z"
