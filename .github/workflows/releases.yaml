@@ -2,7 +2,7 @@ name: Release preaparation
 on:
   push:
     branches:
-      - release/*
+      - bugfix/releases-action
 
 defaults:
   run:
