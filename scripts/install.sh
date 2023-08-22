@@ -123,6 +123,35 @@ fi
 # pull KNDP CHART #
 ###################
 
+
+count=0
+total=41
+pstr="[=================================================================================================]"
+loading_pid=""
+
+function show_loading() {
+    while [ $count -lt $total ]; do
+        sleep 0.5
+        count=$(( $count + 1 ))
+        pd=$(( $count * 100 / $total ))
+        printf "\r%3d.%1d%% %.${pd}s" $(( $count * 100 / $total )) $(( ($count * 1000 / $total) % 10 )) $pstr
+    done
+    echo
+}
+
+echo "Adding kndp repository..."
 helm repo add kndp https://kndp.io
+echo "Updating kndp repository..."
 helm repo up kndp
-helm install kndp kndp/kndp
+
+# Start the loading animation in the background
+show_loading &
+loading_pid=$!
+
+echo "Installing kndp chart..."
+helm install kndp kndp/kndp > /dev/null 2>&1
+
+# Wait for the loading animation process to finish
+wait $loading_pid
+
+echo "Installation completed."
