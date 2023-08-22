@@ -100,7 +100,11 @@ nodes:
     protocol: TCP
 EOF
 
-kind create cluster --name kndp --config kind-config.yaml
+if kind get clusters | grep "kndp"; then
+    echo "Cluster 'kndp' already exists. Skipping cluster creation."
+else
+    kind create cluster --name kndp --config kind-config.yaml
+fi
 
 ##########
 ## HELM ##
