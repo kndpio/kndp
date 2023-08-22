@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: stack-operator
+  repository: ghcr.io/kndpio/kndp/stack-operator
   pullPolicy: IfNotPresent
 
 service:

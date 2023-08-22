@@ -3,6 +3,6 @@ autoscaling:
 replicaCount: 1
 container:
   image:
-    repository: cluster-operator
+    repository: ghcr.io/kndpio/kndp/cluster-operator
     pullPolicy: IfNotPresent
 serviceAccount: cluster-operator
