@@ -1,7 +1,7 @@
 FROM golang:1.20-alpine as build
 WORKDIR /app
 ENV STACKS_DIRECTORY=""
-COPY . .
+COPY ./src .
 RUN CGO_ENABLED=0 go build -o /stack-operator
 
 FROM scratch
