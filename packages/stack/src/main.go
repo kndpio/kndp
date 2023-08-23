@@ -90,7 +90,7 @@ func getManifestMetadata(content []byte) (string, string, string) {
 // getStatus checks the status of an application set using `kubectl describe`.
 // It returns "Activated" if the status contains "Status: True", otherwise "Not Activated".
 func getStatus(applicationName string) string {
-	cmd := exec.Command("kubectl", "describe", "applicationset", applicationName)
+	cmd := exec.Command("kubectl", "describe", "application", applicationName)
 	output, err := cmd.Output()
 	if err != nil {
 		return "Deactivated" 

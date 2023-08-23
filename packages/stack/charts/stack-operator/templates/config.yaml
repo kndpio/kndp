@@ -12,7 +12,7 @@ metadata:
   name: stack-operator-role
 rules:
 - apiGroups: ["argoproj.io"]
-  resources: ["applicationsets"]
+  resources: ["applications"]
   verbs: ["get", "list", "watch", "create", "update", "delete"]
 - apiGroups: [""]
   resources: ["pods"]
