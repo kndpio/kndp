@@ -13,8 +13,8 @@ entries:
     version: 0.1.0
   kndp:
   - apiVersion: v2
-    appVersion: b0b1f71db0e39b564c6a59a3fe4efe077e231ef3
-    created: "2023-08-17T15:25:05.422661549Z"
+    appVersion: 0b933b8b3adbceb5a8e6b828fd943427a6837e51
+    created: "2023-08-23T09:44:51.82777313Z"
     dependencies:
     - name: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
@@ -29,13 +29,13 @@ entries:
       repository: https://helm.releases.hashicorp.com
       version: ~0.25.0
     - name: cluster-operator
-      repository: file://../../../cluster-operator/charts/operator
+      repository: file://../../../cluster/charts/cluster-operator
       version: ~0.1.0
     - name: stack-operator
-      repository: file://../../../stack-operator/charts/stack-operator
+      repository: file://../../../stack/charts/stack-operator
       version: ~0.1.0
     description: A Helm chart for Kubernetes
-    digest: 872f335dced3cc000f905291a77d184c84ea439253523e124667f5f6741dbcb0
+    digest: 73e9df6ca08e0f9aac9cebd021ae325790e76784b924fa18a351b608404feda0
     name: kndp
     type: application
     urls:
@@ -139,4 +139,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-17T15:25:05.39132205Z"
+generated: "2023-08-23T09:44:51.803579072Z"
