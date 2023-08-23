@@ -51,7 +51,8 @@ jobs:
           git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq > build.txt;
       - name: Build images
         id: build
-        run: cat build.txt | xargs -I{} bash -c '[ -f {}/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} -f {} . && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} || true'
+
+        run: cat build.txt | xargs -I{} bash -c '[ -f {}/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} -f {}/Dockerfile . && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} || true'
 
       - name: Package with commit sha
         id: pack-sha
