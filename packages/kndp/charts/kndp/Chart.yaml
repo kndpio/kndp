@@ -26,6 +26,6 @@ dependencies:
   - name: stack-operator
     version: "~0.1.0"
     repository: file://../../../stack/charts/stack-operator
-  - name: local-repo
+  - name: charts-microservice
     version: "~0.1.0"
     repository: file://../../../microservice/charts/charts-microservice
