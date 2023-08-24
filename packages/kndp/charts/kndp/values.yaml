@@ -3,6 +3,7 @@ argo-cd:
   configs:
     cm:
        ui.cssurl: "./css/generated.css"
+       exec.enabled: true
   server:
 
     restartPolicy: Never
