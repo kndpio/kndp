@@ -10,4 +10,4 @@ COPY --from=build /stack-operator /
 COPY --from=alpine/k8s:1.24.16 /usr/bin/kubectl /usr/local/bin/kubectl
 ENTRYPOINT [ "/stack-operator" ]
 EXPOSE 8080
- 
+  

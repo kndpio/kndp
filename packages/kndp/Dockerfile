@@ -9,7 +9,7 @@ RUN npm install
 RUN npx nx run kndp:build-extensions
 RUN npx nx run kndp:build-backend
 RUN npx nx run kndp:build-list
-
+ 
 # Stage 2: Production Stage
 FROM node:18-alpine
 

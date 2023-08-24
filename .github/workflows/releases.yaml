@@ -2,7 +2,7 @@ name: Release preaparation
 on:
   push:
     branches:
-      - release/*
+      - KNDP-54
 
 defaults:
   run:
@@ -45,6 +45,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install semver
+        run: npm install -g semver
+
       - name: Prepare metadata
         id: metadata
         run: |
@@ -56,12 +59,12 @@ jobs:
 
       - name: Package with commit sha
         id: pack-sha
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${chart_version} || true';
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${incremented} || true';
 
       - name: Package
         id: pack
         run: |
-          cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u -d ./all-charts/${chart_name}-${chart_version} || true'
+          cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u -d ./all-charts/${chart_name}-${incremented} || true'
       - name: Install dependencies
         run: npm install
 
