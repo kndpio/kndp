@@ -1,6 +1,6 @@
 # Kubernetes Native Development Platform (KNDP)
 
-![KNDP Logo](./website/static/logo.png)
+![KNDP Logo](./website/static/logo-transparent-small.png)
 
 ## Overview
 
