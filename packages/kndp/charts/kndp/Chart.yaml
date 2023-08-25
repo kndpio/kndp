@@ -28,4 +28,4 @@ dependencies:
     repository: file://../../../stack/charts/stack-operator
   - name: charts-microservice
     version: "~0.1.0"
-    repository: file://../../../microservice/charts/charts-microservice
+    repository: file://../../../local-repo/charts/local-repo

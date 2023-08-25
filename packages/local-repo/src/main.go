@@ -43,7 +43,7 @@ func generateRepoIndex(outputDir string) error {
 
 func main() {
 	rootDir := "/storage"
-	outputDir := "./packages"
+	outputDir := ".platform/charts"
 
 	chartYamlFiles, err := findChartYamlFiles(rootDir)
 	if err != nil {
