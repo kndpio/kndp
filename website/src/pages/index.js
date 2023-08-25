@@ -1,44 +1,38 @@
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import React from 'react';
+import clsx from 'clsx';
+import Link from '@docusaurus/Link';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import Layout from '@theme/Layout';
+import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
-function Home() {
+import styles from './index.module.css';
+
+function HomepageHeader() {
+  const {siteConfig} = useDocusaurusContext();
   return (
-    <div className="container">
-      <header className="hero">
-        <img src={useBaseUrl('logo-transparent-small.png')} alt="KNDP Logo" />
-        <h1 className="hero__title">Kubernetes Native Development Platform (KNDP)</h1>
-        <p className="hero__subtitle">Streamline your Kubernetes-native development.</p>
-      </header>
-
-      <main>
-        <section>
-          <h2>Features</h2>
-          <ul>
-            <li>Kubernetes-Native Integration</li>
-            <li>Developer-Friendly Workflows</li>
-            <li>Scalable Architecture</li>
-            <li>Extensible Plugin System</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Getting Started</h2>
-          <p>Learn how to set up and start using KNDP with our comprehensive guides and tutorials.</p>
-          <a href={useBaseUrl('docs/getting-started')} className="button">Get Started</a>
-        </section>
-
-        <section>
-          <h2>Community</h2>
-          <p>Join our vibrant community of developers and Kubernetes enthusiasts. Share ideas, ask questions, and collaborate on new features.</p>
-          <a href={useBaseUrl('docs/community')} className="button">Join the Community</a>
-        </section>
-      </main>
-
-      <footer>
-        <p>© 2023 KNDP. All rights reserved.</p>
-      </footer>
-    </div>
+    <header className={clsx('hero hero--primary', styles.heroBanner)}>
+      <div className="container">
+        <h1 className="hero__title">{siteConfig.title}</h1>
+        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <div className={styles.buttons}>
+          <Link>           
+         </Link>
+        </div>
+      </div>
+    </header>
   );
 }
 
-export default Home;
+export default function Home() {
+  const {siteConfig} = useDocusaurusContext();
+  return (
+    <Layout
+      title={`${siteConfig.title}`}
+      description="Description will go into a meta tag in < head />">
+      <HomepageHeader />
+      <main>        
+        <HomepageFeatures />        
+      </main>
+    </Layout>
+  );
+}

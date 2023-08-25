@@ -1,35 +1,44 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import React from 'react';
-import clsx from 'clsx';
-import styles from './styles.module.css';
 
-const FeatureList = [
-  
-];
-
-function Feature({Svg, title, description}) {
+function HomeFeatures() {
   return (
-    <div className={clsx('col col--')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
+    <div className="container">
+      <header className="hero">
+        <img src={useBaseUrl('logo-transparent-small.png')} alt="KNDP Logo" />
+        <h1 className="hero__title">Kubernetes Native Development Platform (KNDP)</h1>
+        <p className="hero__subtitle">Streamline your Kubernetes-native development.</p>
+      </header>
+
+      <main>
+        <section>
+          <h2>Features</h2>
+          <ul>
+            <li>Kubernetes-Native Integration</li>
+            <li>Developer-Friendly Workflows</li>
+            <li>Scalable Architecture</li>
+            <li>Extensible Plugin System</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Getting Started</h2>
+          <p>Learn how to set up and start using KNDP with our comprehensive guides and tutorials.</p>
+          <a href={useBaseUrl('docs/getting-started')} className="button">Get Started</a>
+        </section>
+
+        <section>
+          <h2>Community</h2>
+          <p>Join our vibrant community of developers and Kubernetes enthusiasts. Share ideas, ask questions, and collaborate on new features.</p>
+          <a href={useBaseUrl('docs/community')} className="button">Join the Community</a>
+        </section>
+      </main>
+
+      <footer>
+        <p>© 2023 KNDP. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
 
-export default function HomepageFeatures() {
-  return (
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+export default HomeFeatures;
