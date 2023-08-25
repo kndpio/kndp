@@ -62,8 +62,8 @@ entries:
     - https://github.com/web-seven/kndp/releases/download/kndp-0.1.11/kndp-0.1.11.tgz
     version: 0.1.11
   - apiVersion: v2
-    appVersion: 0b933b8b3adbceb5a8e6b828fd943427a6837e51
-    created: "2023-08-23T09:44:51.82777313Z"
+    appVersion: 5f8206f00a186ba2e0cd1bec5c54077b597c1972
+    created: "2023-08-25T13:27:29.010647033Z"
     dependencies:
     - name: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
@@ -84,7 +84,7 @@ entries:
       repository: file://../../../stack/charts/stack-operator
       version: ~0.1.0
     description: A Helm chart for Kubernetes
-    digest: 73e9df6ca08e0f9aac9cebd021ae325790e76784b924fa18a351b608404feda0
+    digest: ef5e86799381d02214a85dfef177f4995d986cf2944ec8c004f86ef25d86d2c5
     name: kndp
     type: application
     urls:
@@ -208,4 +208,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-25T09:44:29.928125156Z"
+generated: "2023-08-25T13:27:28.987501388Z"
