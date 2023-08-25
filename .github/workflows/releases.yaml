@@ -2,7 +2,7 @@ name: Release preaparation
 on:
   push:
     branches:
-      - KNDP-54
+      - release/*
 
 defaults:
   run:
