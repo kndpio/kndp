@@ -9,7 +9,7 @@ RUN npm install
 RUN npx nx run kndp:build-extensions
 RUN npx nx run kndp:build-backend
 RUN npx nx run kndp:build-list
-
+ 
 # Stage 2: Production Stage
 FROM node:18-alpine
 
@@ -17,4 +17,4 @@ WORKDIR /packages
 
 COPY --from=build /packages/packages/kndp/charts/kndp/files /packages
 EXPOSE 3000
-CMD ["node", "/packages/backend.js"]
+CMD ["node", "/packages/backend.js"] 

@@ -35,15 +35,22 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@github.com"
+
       - name: Install Helm
         uses: azure/setup-helm@v3
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
+      - name: Helm repo add kndp
+        run: helm repo add kndp https://kndp.io
+
       - name: Setup node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Install semver
+        run: npm install -g semver
 
       - name: Prepare metadata
         id: metadata
@@ -56,12 +63,12 @@ jobs:
 
       - name: Package with commit sha
         id: pack-sha
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${chart_version} || true';
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --versions | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${incremented} || true';
 
       - name: Package
         id: pack
-        run: |
-          cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename {}) && chart_version=$(cat {}/charts/*/Chart.yaml | grep version | awk '\''{print $2}'\'') && helm package {}/charts/${chart_name} -u -d ./all-charts/${chart_name}-${chart_version} || true'
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --versions | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u -d ./all-charts/${chart_name}-${incremented} || true'
+     
       - name: Install dependencies
         run: npm install
 
@@ -89,7 +96,7 @@ jobs:
           fi
         env:
           CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
-          CR_OWNER: web-seven
+          CR_OWNER: kndpio
           CR_GIT_REPO: kndp
           CR_GIT_BASE_URL: "https://api.github.com/"
           CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
