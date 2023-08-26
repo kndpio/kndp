@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "micro.fullname" . }}
+  name: {{ include "local-repo.fullname" . }}
   labels:
-    {{- include "micro.labels" . | nindent 4 }}
+    {{- include "local-repo.labels" . | nindent 4 }}
 spec:
 
   replicas: {{ .Values.replicaCount }}
 
   selector:
     matchLabels:
-      {{- include "micro.selectorLabels" . | nindent 6 }}
+      {{- include "local-repo.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "micro.selectorLabels" . | nindent 8 }}
+        {{- include "local-repo.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -26,10 +26,10 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           volumeMounts:
-            - name: micro
+            - name: local-repo
               mountPath: /storage
       volumes:
-        - name: micro
+        - name: local-repo
           hostPath:
             path: /storage
             type: Directory
