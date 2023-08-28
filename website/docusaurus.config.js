@@ -9,7 +9,9 @@ module.exports = {
       minHeadingLevel: 2,
       maxHeadingLevel: 5,
     },
+
   },
+  
 };
 
 
