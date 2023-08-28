@@ -3,7 +3,7 @@ entries:
   cluster-operator:
   - apiVersion: v2
     appVersion: 777fdfb24aa196ef40994562c9a26f41a5ce43e9
-    created: "2023-08-25T13:38:39.58076863Z"
+    created: "2023-08-25T13:38:39.58076863Z" 
     description: A Helm chart for Kubernetes
     digest: 8297e779b242af83420424f5482120edd13dc88e056c43931e59a4e319490d1d
     name: cluster-operator
