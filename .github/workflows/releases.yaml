@@ -52,6 +52,11 @@ jobs:
       - name: Install semver
         run: npm install -g semver
 
+      - name: Extract branch name
+        shell: bash
+        run: release_version="${GITHUB_HEAD_REF#release/:-${GITHUB_REF#refs/heads/release/}}" 
+        id: extract_branch
+
       - name: Prepare metadata
         id: metadata
         run: |
@@ -63,11 +68,11 @@ jobs:
 
       - name: Package with commit sha
         id: pack-sha
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --versions | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${incremented} || true';
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=0.1.0, >$(semver -i minor 0.1.0)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
 
       - name: Package
         id: pack
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --versions | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version $incremented -u -d ./all-charts/${chart_name}-${incremented} || true'
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=0.1.0, >$(semver -i minor 0.1.0)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
      
       - name: Install dependencies
         run: npm install
