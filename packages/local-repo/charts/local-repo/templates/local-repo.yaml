@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: local-repo-{{ .Chart.Name }}
+  name: {{ include "local-repo.fullname" . }} 
   namespace: {{ .Release.Namespace }}
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  url: http://{{.Release.Name}}.{{.Release.Namespace}}.svc:5000
+  url: http://{{ include "local-repo.fullname" . }}.{{.Release.Namespace}}.svc:5000
   type: helm
   insecure: "true" 
   forceHttpBasicAuth: "true"
