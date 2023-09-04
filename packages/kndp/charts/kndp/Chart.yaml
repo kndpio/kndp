@@ -22,7 +22,7 @@ dependencies:
     repository: https://helm.releases.hashicorp.com
   - name: cluster-operator
     version: "~0.1.0"
-    repository: file://../../../cluster-operator/charts/operator
+    repository: https://kndp.io
   - name: stack-operator
     version: "~0.1.0"
-    repository: file://../../../stack-operator/charts/stack-operator
+    repository: https://kndp.io
