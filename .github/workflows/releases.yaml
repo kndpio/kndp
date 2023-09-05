@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - release/*
+    paths-ignore:
+      - "**/*/Chart.yaml"
 
 defaults:
   run:
@@ -55,7 +57,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: release_version="${GITHUB_HEAD_REF#release/:-${GITHUB_REF#refs/heads/release/}}" 
+        run: release_version="${GITHUB_REF_NAME#release/}.0" && echo $release_version 
         id: extract_branch
 
 
@@ -63,6 +65,15 @@ jobs:
         id: metadata
         run: |
           git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq > build.txt;
+
+      - name: install yq
+        run: | 
+            sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+            sudo chmod a+x /usr/local/bin/yq
+
+      - name: Updating charts appVersion
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts ] && yq -i ".appVersion=\"${{ github.sha }}\"" {}/charts/*/Chart.yaml || true'
+
       - name: Build images
         id: build
 
@@ -71,12 +82,22 @@ jobs:
       - name: Package with commit sha
         id: pack-sha
 
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, >$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u --app-version ${{ github.sha }} -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, <$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u  -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
 
       - name: Package
         id: pack
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, >$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, <$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
 
+      - name: delete build.txt
+        run: rm build.txt
+
+      - name: Apply new changes to current branch
+        run: |
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git checkout ${GITHUB_REF_NAME}
+            git add .
+            git commit -m "Updated appVersion by action"
+            git push  
      
       - name: Install dependencies
         run: npm install
@@ -112,7 +133,6 @@ jobs:
           CR_PACKAGE_PATH: all-charts
           CR_SKIP_EXISTING: true
 
-
       - name: Pulling last version of index.yaml 
 
         working-directory: /home/runner/work/kndp/kndp/website/build
@@ -133,8 +153,6 @@ jobs:
               echo "No all-charts directory to create index.yaml, skipping"
             fi
             
-
-      
       - name: create CNAME file with kndp.io domain
         run: echo kndp.io > website/build/CNAME
       
