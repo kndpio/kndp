@@ -2,7 +2,7 @@ name: Release preaparation
 on:
   push:
     branches:
-      - test/kndp-56
+      - release/*
     paths-ignore:
       - "**/*/Chart.yaml"
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: release_version="${GITHUB_REF_NAME}.0" && echo $release_version 
+        run: release_version="${GITHUB_REF_NAME#release/}.0" && echo $release_version 
         id: extract_branch
 
 
@@ -74,7 +74,6 @@ jobs:
       - name: Updating charts appVersion
         run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts ] && yq -i ".appVersion=\"${{ github.sha }}\"" {}/charts/*/Chart.yaml || true'
 
-
       - name: Build images
         id: build
 
@@ -89,7 +88,18 @@ jobs:
         id: pack
         run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, <$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
 
-     
+      - name: delete build.txt
+        run: rm build.txt
+
+      - name: Apply new changes to current branch
+        run: |
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git checkout -b temporary-branch ${GITHUB_REF_NAME}
+            git add .
+            git commit -m "Updated appVersion by action"
+            git push origin temporary-branch
+            gh pr create --base ${GITHUB_REF_NAME} --head temporary-branch --title "Merge gh-action-temporary-branch with release" --body "This branch contains only required Chart.yaml appVersion"
+
       - name: Install dependencies
         run: npm install
 
@@ -124,7 +134,6 @@ jobs:
           CR_PACKAGE_PATH: all-charts
           CR_SKIP_EXISTING: true
 
-
       - name: Pulling last version of index.yaml 
 
         working-directory: /home/runner/work/kndp/kndp/website/build
@@ -145,8 +154,6 @@ jobs:
               echo "No all-charts directory to create index.yaml, skipping"
             fi
             
-
-      
       - name: create CNAME file with kndp.io domain
         run: echo kndp.io > website/build/CNAME
       
@@ -155,8 +162,3 @@ jobs:
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: /home/runner/work/kndp/kndp/website/build
-      - name: Apply new changes to current branch
-        run: |
-            git add .
-            git commmit -m "changes from action"
-            git push  

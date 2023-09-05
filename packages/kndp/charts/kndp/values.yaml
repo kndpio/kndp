@@ -75,7 +75,6 @@ ingress-nginx:
       publish-status-address: localhost
       enable-ssl-passthrough: true
 
- 
 vault:
   server:
     enabled: true
