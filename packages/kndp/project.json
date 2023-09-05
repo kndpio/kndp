@@ -4,6 +4,29 @@
     "projectType": "application",
     "tags": ["scope:kndp"],
     "targets": {
+      "build-application-development": {
+        "executor": "@nrwl/webpack:webpack",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "packages/kndp/charts/kndp/application-development",
+          "main": "packages/kndp/src/application-development.tsx",
+          "tsConfig": "packages/kndp/tsconfig.json",
+          "outputFileName": "extension-application-development.js",
+          "runtimeChunk": false,
+          "target": "web",
+          "compiler": "tsc",
+          "sourceMap": false,
+          "watch": true
+        },
+        "configurations": {
+          "production": {
+            "optimization": true,
+            "extractLicenses": true,
+            "inspect": false,
+            "fileReplacements": []
+          }
+        }
+      },
       "build-list": {
         "executor": "@nrwl/webpack:webpack",
         "outputs": ["{options.outputPath}"],
