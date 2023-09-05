@@ -1,0 +1,18 @@
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/kndpio/kndp/local-repo
+  pullPolicy: IfNotPresent
+  tag: ""
+
+
+service:
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false

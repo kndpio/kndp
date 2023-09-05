@@ -36,4 +36,6 @@ testem.log
 /packages/kndp/charts/kndp/charts
 /packages/kndp/charts/kndp/Chart.lock
 /packages/kndp/charts/kndp/files
-/packages/operator/go.sum
+/packages/cluster/src/go.sum
+/packages/microservice/src/go.sum
+/packages/stack/src/go.sum
