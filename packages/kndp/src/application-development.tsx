@@ -82,7 +82,7 @@ const TableList: React.FC<{
     try {
       if (chart && version) {
         const response = await fetch(
-          `http://kndp-development-view:8080/api/update/${chart}-${version}`,
+          `http://kndp-development-view:8080/api/stack/${chart}-${version}`,
           {
             method: 'POST',
             headers: {
@@ -174,7 +174,7 @@ const AppDevelopment = () => {
 
           if (chart) {
             fetch(
-              `http://kndp-development-view:8080/api/stacks/${chart}-${targetRevision}`
+              `http://kndp-development-view:8080/api/stack/${chart}-${targetRevision}`
             )
               .then((response) => response.json())
               .then((data) => setData(data.services))
