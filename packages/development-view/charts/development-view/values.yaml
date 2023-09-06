@@ -1,0 +1,10 @@
+replicaCount: 1
+image:
+  repository: ghcr.io/kndpio/kndp/development-view
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+
