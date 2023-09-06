@@ -6,3 +6,6 @@ container:
     repository: ghcr.io/kndpio/kndp/cluster
     pullPolicy: IfNotPresent
 serviceAccount: cluster-operator
+nodes:
+  enabled: true
+  pubKey: ''

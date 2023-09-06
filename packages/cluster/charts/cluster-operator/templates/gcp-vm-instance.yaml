@@ -1,0 +1,29 @@
+{{ if .Values.nodes.enabled -}}
+apiVersion: compute.gcp.upbound.io/v1beta1
+kind: Instance
+metadata:
+  annotations:
+    meta.upbound.io/example-id: compute/v1beta1/targetinstance
+  labels:
+    testing.upbound.io/example-name: target-instance
+  name: target-instance
+spec:
+  forProvider:
+    bootDisk:
+      - initializeParams:
+          - image: debian-cloud/debian-11
+    machineType: e2-medium
+    metadataStartupScript: |
+      sudo echo 'GatewayPorts yes' >> /etc/ssh/sshd_config &&
+      sudo echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config &&
+      sudo echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
+      sudo sed -i 's\PermitRootLogin no\#PermitRootLogin no\g' /etc/ssh/sshd_config &&
+      sudo mkdir /root/.ssh &&
+      sudo echo '{{ .Values.nodes.pubKey }}' > /root/.ssh/authorized_keys &&
+      sudo systemctl restart sshd
+    networkInterface:
+      - network: default
+        accessConfig:
+          - {}
+    zone: europe-west3-c
+{{ end -}}

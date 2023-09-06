@@ -1,0 +1,5 @@
+kubectl create secret generic gcp-secret -n crossplane-system --from-file=creds=./gcp-credentials.json
+curl -sfL https://get.k3s.io | sh - --flannel-external-ip 127.0.0.1
+ssh -R 0.0.0.0:8443:localhost:6443 root@35.242.219.200
+TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
+./k3s agent --server https://127.0.0.1:8443 --debug --token=$TOKEN --with-node-id remote1 
