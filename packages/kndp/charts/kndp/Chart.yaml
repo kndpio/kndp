@@ -26,6 +26,10 @@ dependencies:
   - name: stack-operator
     version: "~0.1.0"
     repository: file://../../../stack/charts/stack-operator
+  - name: development-view
+    version: "~0.1.0"
+    repository: file://../../../development-view/charts/development-view
   - name: local-repo
     version: "~0.1.0"
     repository: file://../../../local-repo/charts/local-repo
+
