@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - release/*
-    paths-ignore:
-      - "**/*/Chart.yaml"
 
 defaults:
   run:
@@ -55,49 +53,33 @@ jobs:
         run: npm install -g semver
 
 
-      - name: Extract branch name
-        shell: bash
-        run: release_version="${GITHUB_REF_NAME#release/}.0" && echo $release_version 
-        id: extract_branch
-
+      - name: Set environment variables
+        run: |
+          release_version="${GITHUB_REF_NAME#release/}.0"
+          echo $release_version
+          release_version_patch=$(semver -i minor $release_version)
+          version_constraint=">=${release_version},<${release_version_patch}"
+          echo "::set-env name=RELEASE_VERSION::${release_version}"
+          echo "::set-env name=VERSION_CONSTRAINT::${version_constraint}"
+          echo "::set-env name=RELEASE_VERSION_PATCH::${release_version_patch}"
 
       - name: Prepare metadata
         id: metadata
         run: |
           git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq > build.txt;
 
-      - name: install yq
-        run: | 
-            sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-            sudo chmod a+x /usr/local/bin/yq
-
-      - name: Updating charts appVersion
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts ] && yq -i ".appVersion=\"${{ github.sha }}\"" {}/charts/*/Chart.yaml || true'
-
       - name: Build images
         id: build
+        run: cat build.txt | xargs -I{} bash -c '[ -f {}/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version -f {}/Dockerfile . && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true'
 
-        run: cat build.txt | xargs -I{} bash -c '[ -f {}/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} -f {}/Dockerfile . && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):${{ github.sha }} || true'
-
-      - name: Package with commit sha
+      - name: Package with release branch version
         id: pack-sha
-
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, <$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u  -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version "$version_constraint" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u  --app-version $release_version -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
 
       - name: Package
         id: pack
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version ">=$release_version, <$(semver -i minor $release_version)" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version "$version_constraint" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true'
 
-      - name: delete build.txt
-        run: rm build.txt
-
-      - name: Apply new changes to current branch
-        run: |
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            git checkout ${GITHUB_REF_NAME}
-            git add .
-            git commit -m "Updated appVersion by action"
-            git push  
      
       - name: Install dependencies
         run: npm install
@@ -134,9 +116,7 @@ jobs:
           CR_SKIP_EXISTING: true
 
       - name: Pulling last version of index.yaml 
-
         working-directory: /home/runner/work/kndp/kndp/website/build
-
         run: curl -O -L "https://github.com/web-seven/kndp/raw/gh-pages/index.yaml"
 
 
@@ -148,7 +128,6 @@ jobs:
             helm repo index all-charts --url "https://github.com/web-seven/kndp/releases/download/" --merge /home/runner/work/kndp/kndp/website/build/index.yaml
             rm /home/runner/work/kndp/kndp/website/build/index.yaml
             cp all-charts/index.yaml /home/runner/work/kndp/kndp/website/build
-
             else
               echo "No all-charts directory to create index.yaml, skipping"
             fi
