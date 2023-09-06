@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/kndpio/kndp/local-repo
   pullPolicy: IfNotPresent
-  tag: ""
+
 
 
 service:
