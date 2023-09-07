@@ -55,13 +55,10 @@ jobs:
 
       - name: Set environment variables
         run: |
-          release_version="${GITHUB_REF_NAME#release/}.0"
-          echo $release_version
-          release_version_patch=$(semver -i minor $release_version)
-          version_constraint=">=${release_version},<${release_version_patch}"
-          echo "::set-env name=RELEASE_VERSION::${release_version}"
-          echo "::set-env name=VERSION_CONSTRAINT::${version_constraint}"
-          echo "::set-env name=RELEASE_VERSION_PATCH::${release_version_patch}"
+          echo "RELEASE_VERSION=${GITHUB_REF_NAME#release/}.0" >> $GITHUB_ENV
+          echo "RELEASE_VERSION_PATCH=$(semver -i minor $release_version)" >> $GITHUB_ENV
+          echo "VERSION_CONSTRAINT=>=${RELEASE_VERSION},<${RELEASE_VERSION_PATCH}" >> $GITHUB_ENV
+          echo $RELEASE_VERSION
 
       - name: Prepare metadata
         id: metadata
