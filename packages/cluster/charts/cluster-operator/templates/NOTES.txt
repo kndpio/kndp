@@ -1,5 +1,22 @@
 kubectl create secret generic gcp-secret -n crossplane-system --from-file=creds=./gcp-credentials.json
 curl -sfL https://get.k3s.io | sh - --flannel-external-ip 127.0.0.1
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ssh -R 0.0.0.0:8443:localhost:6443 root@35.242.219.200
 TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 ./k3s agent --server https://127.0.0.1:8443 --debug --token=$TOKEN --with-node-id remote1 
+
+https://www.freecodecamp.org/news/build-your-own-wireguard-vpn-in-five-minutes/
+
+https://github.com/k3s-io/k3s/issues/2965#issuecomment-909696326
+
+https://hackmd.io/@WesleyCh3n/ntu_iot_k3s
+
+curl -sfL https://get.k3s.io | sh -s - \
+    --write-kubeconfig-mode 644 \
+    --disable servicelb \
+    --disable traefik \
+    --disable metrics-server \
+    --disable local-storage \
+    --node-external-ip 34.107.108.21 \
+    --advertise-address 10.112.0.1 \
+    --flannel-iface wg0

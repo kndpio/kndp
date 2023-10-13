@@ -20,7 +20,24 @@ spec:
       sudo sed -i 's\PermitRootLogin no\#PermitRootLogin no\g' /etc/ssh/sshd_config &&
       sudo mkdir /root/.ssh &&
       sudo echo '{{ .Values.nodes.pubKey }}' > /root/.ssh/authorized_keys &&
-      sudo systemctl restart sshd
+      sudo systemctl restart sshd &&
+      sudo wget https://github.com/k3s-io/k3s/releases/download/v1.27.4+k3s1/k3s &&
+      sudo chmod +x k3s &&
+      sudo mv k3s /usr/local/bin &&
+      sudo apt-get -y install wireguard resolvconf mc &&
+      sudo echo "nameserver 8.8.8.8" >> /etc/resolvconf/resolv.conf.d/head &&
+      sudo systemctl restart resolvconf.service &&
+      sudo systemctl restart systemd-resolved.service &&
+      cat <<EOT >> /etc/wireguard/wg0.conf
+      [Interface]
+      Address = 10.5.5.1/24
+      ListenPort = 51820
+      PrivateKey = wCPD6Pf/YhAbpW0DCsko85vEGZYwFHfort0wAvSQC3M=
+
+      [Peer]
+      PublicKey = bDKvTQuU0SbGIixzx3tH/oj808Y9b2qnsJYbov6z2T8=
+      AllowedIPs = 10.5.5.2/32
+      EOT
     networkInterface:
       - network: default
         accessConfig:
