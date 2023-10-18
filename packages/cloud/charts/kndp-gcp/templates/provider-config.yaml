@@ -1,0 +1,10 @@
+apiVersion: gcp.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: {{ .Release.Name }}-provider-config
+spec:
+  credentials:
+    impersonateServiceAccount:
+      name: {{ .Values.providerConfig.serviceAccountName }}
+    source: ImpersonateServiceAccount
+  projectID: {{ .Values.providerConfig.projectID }}

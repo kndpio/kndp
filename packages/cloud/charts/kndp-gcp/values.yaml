@@ -1,0 +1,19 @@
+providerConfig:
+  serviceAccountName: "" 
+  projectID: ""
+
+nodepoolComposition:
+  cluster: ""
+  location: ""
+  maxNodeCount: 16
+  minNodeCount: 0
+  machineType: ""
+  oauthScopes: []
+  preemptible: true
+  labels: 
+    key: "value"
+  taint: 
+    - key: ""
+      value: ""
+      effect: ""
+  tags: []

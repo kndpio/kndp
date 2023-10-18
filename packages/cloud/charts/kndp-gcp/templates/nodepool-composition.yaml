@@ -1,0 +1,45 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: activerelease
+spec:
+  compositeTypeRef:
+    apiVersion: kndp.io/v1alpha1
+    kind: ActiveRelease
+  resources:
+    - name: activerelease
+      base:
+        apiVersion: container.gcp.upbound.io/v1beta1
+        kind: NodePool
+        spec:
+          forProvider:
+            cluster: "{{.Values.nodepoolComposition.cluster}}"
+            location: "{{.Values.nodepoolComposition.location}}"
+            autoscaling:
+             - maxNodeCount: {{.Values.nodepoolComposition.maxNodeCount}}
+             - minNodeCount: {{.Values.nodepoolComposition.minNodeCount}}
+            nodeConfig:
+              - machineType: "{{.Values.nodepoolComposition.machineType}}"
+                oauthScopes: 
+                    "{{- range .Values.nodepoolComposition.oauthScopes }} 
+                    - {{.}}
+                    {{- end }}"
+                
+                preemptible: {{.Values.nodepoolComposition.preemptible}}
+                labels:
+                {{- range $key, $value := .Values.nodepoolComposition.labels }}
+                    {{ $key }}: "{{ $value }}"
+                {{- end }}
+
+                taint:
+                {{- range .Values.nodepoolComposition.taint }}
+                  - key: "{{ .key }}"
+                    value: "{{ .value }}"
+                    effect: "{{ .effect }}"
+                {{- end }}
+
+                tags:
+                    {{- range .Values.nodepoolComposition.tags }} 
+                    - "{{.}}"
+                    {{- end }}
+
