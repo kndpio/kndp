@@ -1,0 +1,46 @@
+{
+    "version": 2,
+    "projects": {
+      "backend": {
+        "architect": {
+          "start": {
+            "builder": "@nx/workspace:run-commands",
+            "options": {
+              "commands": ["backstage-cli package start"]
+            }
+          },
+          "build": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+              "commands": ["backstage-cli package build"]
+            }
+          },
+          "lint": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+              "commands": ["backstage-cli package lint"]
+            }
+          },
+          "test": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+              "commands": ["backstage-cli package test"]
+            }
+          },
+          "clean": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+              "commands": ["backstage-cli package clean"]
+            }
+          },
+          "build-image": {
+            "builder": "@nrwl/workspace:run-commands",
+            "options": {
+              "commands": ["docker build ../.. -f Dockerfile --tag backstage"]
+            }
+          }
+        }
+      }
+    }
+  }
+  
