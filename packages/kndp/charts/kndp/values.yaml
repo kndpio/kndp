@@ -1,11 +1,17 @@
 argo-cd:
-  enabled: true
+  dex:
+    enabled: false
+  applicationSet:
+    enabled: false
+  notifications:
+    enabled: false
   configs:
     cm:
        ui.cssurl: "./css/generated.css"
        exec.enabled: true
-  server:
 
+  server:
+    replicas: 0
     restartPolicy: Never
     extraContainers:
       - name: package
@@ -22,18 +28,15 @@ argo-cd:
         command: ["/bin/sh", "-c"]
         args: 
           - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
-
     volumes: 
       - name: extensions
         emptyDir: {}
     volumeMounts:
-
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions
 
         mountPath: /shared/app/css
-
     extraArgs:
       - --insecure
       - --rootpath
@@ -44,7 +47,6 @@ argo-cd:
         - kndp.local
       paths:
         - /argo-cd
-
       annotations: 
          kubernetes.io/ingress.class: nginx
  
