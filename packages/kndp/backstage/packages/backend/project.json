@@ -1,8 +1,7 @@
 {
+  "backend": {
     "version": 2,
-    "projects": {
-      "backend": {
-        "architect": {
+    "targets": {
           "start": {
             "builder": "@nx/workspace:run-commands",
             "options": {
@@ -42,5 +41,4 @@
         }
       }
     }
-  }
   
