@@ -1,52 +1,47 @@
 {
-  "app": {
     "root": "packages/kndp/backstage/packages/app",
     "version": 2,
     "role": "frontend",
+    "sourceRoot": "packages/kndp/backstage/packages/app/src",
+    "main": "packages/kndp/backstage/packages/app/src/index.tsx",
+    "projectType": "application",
+    "tags": ["scope:kndp"],
     "targets": {
-      "dev": {
-        "executor": "@nrwl/workspace:run-commands",
-        "options": {
-          "commands": ["yarn dev"]
-        }
-      },
-
       "start": {
-        "executor": "@nx:run-script",
+        "executor": "nx:run-commands",
         "options": {
-          "script": ["backstage-cli package start"]
+          "commands": ["backstage-cli package start --role frontend"]
         }
       },
       "build": {
-        "builder": "@nrwl/workspace:run-commands",
+        "executor": "nx:run-commands",
         "options": {
-          "commands": ["backstage-cli package build"]
+          "commands": ["backstage-cli package build --role frontend"]
         }
       },
       "lint": {
-        "builder": "@nrwl/workspace:run-commands",
+        "executor": "nx:run-commands",
         "options": {
-          "commands": ["backstage-cli package lint"]
+          "commands": ["backstage-cli package lint --role frontend"]
         }
       },
       "test": {
-        "builder": "@nrwl/workspace:run-commands",
+        "executor": "nx:run-commands",
         "options": {
-          "commands": ["backstage-cli package test"]
+          "commands": ["backstage-cli package test --role frontend"]
         }
       },
       "clean": {
-        "builder": "@nrwl/workspace:run-commands",
+        "executor": "nx:run-commands",
         "options": {
-          "commands": ["backstage-cli package clean"]
+          "commands": ["backstage-cli package clean --role frontend"]
         }
       },
       "build-image": {
-        "builder": "@nrwl/workspace:run-commands",
+        "executor": "nx:run-commands",
         "options": {
           "commands": ["docker build ../.. -f Dockerfile --tag backstage"]
         }
       }
     }
   }
-}

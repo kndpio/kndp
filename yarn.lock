@@ -10177,40 +10177,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
 
 "app@link:packages/kndp/backstage/packages/app":
   version "0.0.0"
-  dependencies:
-    "@backstage/app-defaults" "^1.4.4"
-    "@backstage/catalog-model" "^1.4.3"
-    "@backstage/cli" "^0.23.0"
-    "@backstage/core-app-api" "^1.11.0"
-    "@backstage/core-components" "^0.13.6"
-    "@backstage/core-plugin-api" "^1.7.0"
-    "@backstage/integration-react" "^1.1.20"
-    "@backstage/plugin-api-docs" "^0.9.12"
-    "@backstage/plugin-catalog" "^1.14.0"
-    "@backstage/plugin-catalog-common" "^1.0.17"
-    "@backstage/plugin-catalog-graph" "^0.2.37"
-    "@backstage/plugin-catalog-import" "^0.10.1"
-    "@backstage/plugin-catalog-react" "^1.8.5"
-    "@backstage/plugin-github-actions" "^0.6.6"
-    "@backstage/plugin-org" "^0.6.15"
-    "@backstage/plugin-permission-react" "^0.4.16"
-    "@backstage/plugin-scaffolder" "^1.15.1"
-    "@backstage/plugin-search" "^1.4.1"
-    "@backstage/plugin-search-react" "^1.7.1"
-    "@backstage/plugin-tech-radar" "^0.6.9"
-    "@backstage/plugin-techdocs" "^1.8.0"
-    "@backstage/plugin-techdocs-module-addons-contrib" "^1.1.1"
-    "@backstage/plugin-techdocs-react" "^1.1.12"
-    "@backstage/plugin-user-settings" "^0.7.11"
-    "@backstage/theme" "^0.4.3"
-    "@material-ui/core" "^4.12.2"
-    "@material-ui/icons" "^4.9.1"
-    history "^5.0.0"
-    react "^17.0.2"
-    react-dom "^17.0.2"
-    react-router "^6.3.0"
-    react-router-dom "^6.3.0"
-    react-use "^17.2.4"
+  uid ""
 
 append-field@^1.0.0:
   version "1.0.0"
@@ -24464,7 +24431,7 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==
 
-prettier@^2.6.2:
+prettier@^2.3.2, prettier@^2.6.2:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -25284,7 +25251,7 @@ react-router-dom@^5.3.3:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router-dom@^6.14.2, react-router-dom@^6.3.0:
+react-router-dom@^6.14.2:
   version "6.17.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.17.0.tgz#ea73f89186546c1cf72b10fcb7356d874321b2ad"
   integrity sha512-qWHkkbXQX+6li0COUUPKAUkxjNNqPJuiBd27dVwQGDNsuFBdMbrS6UZ0CLYc4CsbdLYTckn4oB4tGDuPZpPhaQ==

@@ -122,31 +122,12 @@
   "engines": {
     "node": ">=16.14"
   },
-
-  "scripts": {
-    "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
-    "start": "yarn workspace app start",
-    "start-backend": "yarn workspace backend start",
-    "build:backend": "yarn workspace backend build",
-    "build:all": "backstage-cli repo build --all",
-    "build-image": "yarn workspace backend build-image",
-    "tsc": "tsc",
-    "tsc:full": "tsc --skipLibCheck false --incremental false",
-    "clean": "backstage-cli repo clean",
-    "test": "backstage-cli repo test",
-    "test:all": "backstage-cli repo test --coverage",
-    "test:e2e": "playwright test",
-    "fix": "backstage-cli repo fix",
-    "lint": "backstage-cli repo lint --since origin/master",
-    "lint:all": "backstage-cli repo lint",
-    "prettier:check": "prettier --check .",
-    "new": "backstage-cli new --scope internal"
-  },
-  "workspaces": {
+  "workspaces":{
     "packages": [
-      "packages/kndp/backstage/packages/*",
-      "packages/kndp/backstage/plugins/*",
-      "packages/kndp/backstage/"
-    ]
+      "packages/kndp/backstage"
+    ]    
+  },
+  "webpack":{
+    "entryPoint": "sda"
   }
 }
