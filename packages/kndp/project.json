@@ -4,6 +4,19 @@
     "projectType": "application",
     "tags": ["scope:kndp"],
     "targets": {
+      "start-backstage": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": ["concurrently \"nx run app:start\" \"nx run backend:start\""]
+        }
+      },
+
+      "build-backstage": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": ["nx run app:build"]
+        }
+      },
       "build-list": {
         "executor": "@nrwl/webpack:webpack",
         "outputs": ["{options.outputPath}"],
