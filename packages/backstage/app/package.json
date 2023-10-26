@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "backstage-cli package build --config ../../../app-config.yaml",
+    "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test",
     "lint": "backstage-cli package lint"

@@ -1,0 +1,34 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/kndpio/kndp/app
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: kndp.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+podAnnotations: ""
+podLabels: ""
+
+volumes: []
+volumeMounts: []
+
+env:
+  - name: APP_CONFIG_app_baseUrl
+    value: http://kndp.local
+  - name: APP_CONFIG_backend_baseUrl
+    value: http://kndp.local
+
