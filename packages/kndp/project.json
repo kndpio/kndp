@@ -14,7 +14,7 @@
       "build-backstage": {
         "executor": "nx:run-commands",
         "options": {
-          "commands": ["nx run app:build"]
+          "commands": ["concurrently \"nx run app:build\" \"nx run backend:build\""]
         }
       },
       "build-list": {
