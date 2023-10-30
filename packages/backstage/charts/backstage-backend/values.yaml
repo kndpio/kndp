@@ -1,0 +1,25 @@
+replicaCount: 1
+image:
+  repository: ghcr.io/kndpio/kndp/backend
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: ClusterIP
+  port: 7007
+
+podAnnotations: ""
+podLabels: ""
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: 
+    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: kndp.local
+      paths:
+        - path: /api
+          pathType: ImplementationSpecific
