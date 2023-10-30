@@ -39,7 +39,7 @@ import {
   EntityOwnershipCard,
 } from '@backstage/plugin-org';
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
-import { EmptyState } from '@backstage/core-components';
+import { CardTab, Content, EmptyState } from '@backstage/core-components';
 import {
   Direction,
   EntityCatalogGraphCard,
@@ -140,6 +140,15 @@ const overviewContent = (
   </Grid>
 );
 
+const aboutContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    {entityWarningContent}
+    <Grid item md={12}>
+      <EntityAboutCard variant="gridItem" />
+    </Grid>
+  </Grid>
+);
+
 const serviceEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
@@ -205,6 +214,14 @@ const websiteEntityPage = (
   </EntityLayout>
 );
 
+const releaseEntityPage = (
+  <EntityLayout>
+    <EntityLayout.Route path="/" title="About">
+      {aboutContent}
+    </EntityLayout.Route>
+  </EntityLayout>
+);
+
 /**
  * NOTE: This page is designed to work on small screens such as mobile devices.
  * This is based on Material UI Grid. If breakpoints are used, each grid item must set the `xs` prop to a column size or to `true`,
@@ -232,6 +249,10 @@ const componentPage = (
 
     <EntitySwitch.Case if={isComponentType('website')}>
       {websiteEntityPage}
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isComponentType('active-release')}>
+      {releaseEntityPage}
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
