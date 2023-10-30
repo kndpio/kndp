@@ -23,3 +23,6 @@ ingress:
       paths:
         - path: /api
           pathType: ImplementationSpecific
+          
+apiEndpoints:
+   - 'https://kubernetes.default.svc/apis/kndp.io/v1alpha1/releases'
