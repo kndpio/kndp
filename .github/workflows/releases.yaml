@@ -64,6 +64,7 @@ jobs:
       - name: Reveal release_version
         run: echo $release_version
 
+
       - name: Prepare metadata
         id: metadata
         run: |
