@@ -1,7 +1,7 @@
 import { UrlReader } from '@backstage/backend-common';
 import { Entity } from '@backstage/catalog-model';
 import { EntityProvider, EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import * as https from 'https';
+import { readFileSync } from 'fs';
 
 export class KubernetesProvider implements EntityProvider {
   private readonly env: string;
@@ -29,13 +29,18 @@ export class KubernetesProvider implements EntityProvider {
     }
 
     try {
+      const serviceAccountToken = readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+
       for (const apiUrl of this.apiEndpoints) {
         try {
           const fetchOptions = {
             method: 'GET',
-            agent: new https.Agent({ rejectUnauthorized: false }),
+            headers: {
+              'Authorization': `Bearer ${serviceAccountToken}`
+            }
           };
           const request = new Request(apiUrl, fetchOptions);
+          console.log(`Making API request to: ${apiUrl}`);
 
           const response = await fetch(request);
 
