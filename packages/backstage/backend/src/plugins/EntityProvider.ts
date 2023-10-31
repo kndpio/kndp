@@ -19,11 +19,10 @@ export class KubernetesProvider implements EntityProvider {
   getProviderName(): string {
     return `kubernetes-${this.env}`;
   }
-
   async connect(connection: EntityProviderConnection): Promise<void> {
     this.connection = connection;
   }
-
+ 
   async run(): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');

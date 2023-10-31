@@ -29,8 +29,9 @@ jobs:
           password: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Checkout
-        uses: actions/checkout@v1
-
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 2
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -67,8 +68,7 @@ jobs:
 
       - name: Prepare metadata
         id: metadata
-        run: |
-          git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 "/" $3 }' | uniq > build.txt;
+        run: git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 "/" $3 }' | uniq > build.txt;
 
       - name: Build images
         id: build

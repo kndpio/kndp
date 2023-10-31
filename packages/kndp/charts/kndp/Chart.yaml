@@ -38,4 +38,3 @@ dependencies:
   - name: backstage-backend
     version: "~0.1.0"
     repository: file://../../../backstage/charts/backstage-backend
-
