@@ -32,12 +32,11 @@ export class KubernetesProvider implements EntityProvider {
     try {
       for (const apiUrl of this.apiEndpoints) {
         try {
-          const request = new Request(apiUrl, {
-            method: 'GET',
-          });
           const fetchOptions = {
+            method: 'GET',
             agent: new https.Agent({ rejectUnauthorized: false }),
           };
+          const request = new Request(apiUrl, fetchOptions);
 
           const response = await fetch(request);
 
@@ -74,8 +73,8 @@ function processKubernetesData(data: string): Entity[] {
         apiVersion: 'backstage.io/v1alpha1',
         metadata: {
           annotations: {
-            "backstage.io/managed-by-location": "file:../../../..//catalog-info.yaml",
-            "backstage.io/managed-by-origin-location": "file:../../../../catalog-info.yaml"
+            "backstage.io/managed-by-location": "url:https://kubernetes.default.svc/apis/kndp.io/v1alpha1/releases",
+            "backstage.io/managed-by-origin-location": "url:https://kubernetes.default.svc/apis/kndp.io/v1alpha1/releases"
           },
           name: parsedData.metadata.name,
           namespace: parsedData.metadata.namespace,
@@ -88,7 +87,6 @@ function processKubernetesData(data: string): Entity[] {
       };
 
       entities.push(entity);
-      console.log(entity);
     }
     return entities;
   } catch (error) {

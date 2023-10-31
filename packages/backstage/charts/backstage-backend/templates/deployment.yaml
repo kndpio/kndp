@@ -30,11 +30,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API_ENDPOINTS
-            value: {{- .Values.apiEndpoints | join(";") -}}
+            value: '{{- join ";" .Values.apiEndpoints -}}'
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-      envFrom:
-      - secretRef:
-          name: backstage-token
