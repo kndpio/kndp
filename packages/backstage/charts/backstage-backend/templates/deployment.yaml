@@ -31,6 +31,8 @@ spec:
           env:
           - name: API_ENDPOINTS
             value: '{{- join ";" .Values.apiEndpoints -}}'
+          - name: NODE_EXTRA_CA_CERTS
+            value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
