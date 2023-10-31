@@ -34,7 +34,8 @@ dependencies:
     repository: file://../../../local-repo/charts/local-repo
   - name: backstage-app
     version: "~0.1.0"
-    repository: file://../../../backstage/backstage-app
+    repository: file://../../../backstage/charts/backstage-app
   - name: backstage-backend
     version: "~0.1.0"
-    repository: file://../../../backstage/backstage-backend
+    repository: file://../../../backstage/charts/backstage-backend
+

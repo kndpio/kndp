@@ -60,11 +60,10 @@ jobs:
         run: npm install -g semver
 
       - name: Set environment variables
-        run: |
-            branch_name=$(cat .git/HEAD)
-            version=$(echo "$branch_name" | awk -F'/' '{print $2}')
-            release_version="${version}0"
-            echo "release_version=$release_version" >> $GITHUB_ENV
+        run: branch_name=$(cat .git/HEAD) && version=$(echo "$branch_name" | awk -F'/' '{print $4}') && release_version="${version}.0" && echo $release_version && echo "release_version=$release_version" >> $GITHUB_ENV
+      - name: Reveal release_version
+        run: echo $release_version
+
 
       - name: Prepare metadata
         id: metadata

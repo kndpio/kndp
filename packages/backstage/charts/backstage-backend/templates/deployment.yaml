@@ -22,12 +22,15 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      securityContext:
+      serviceAccountName: {{ .Chart.Name }}-sa
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: API_ENDPOINTS
+            value: '{{- join ";" .Values.apiEndpoints -}}'
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
