@@ -13,9 +13,9 @@ export class KubernetesProvider implements EntityProvider {
   constructor(env: string, reader: UrlReader) {
     this.env = env;
     this.reader = reader;
-    const defaultEndpoints = [ 'https://kubernetes.default.svc/apis/kndp.io/v1alpha1/releases' ];
-    this.apiEndpoints = (process.env.API_ENDPOINTS || defaultEndpoints.join(';')).split(';').filter(Boolean);
+    this.apiEndpoints = (process.env.API_ENDPOINTS || '').split(';').filter(Boolean);
   }
+  
   getProviderName(): string {
     return `kubernetes-${this.env}`;
   }
@@ -32,13 +32,8 @@ export class KubernetesProvider implements EntityProvider {
     try {
       for (const apiUrl of this.apiEndpoints) {
         try {
-          const token = process.env.TOKEN;
-          const customHeaders = {
-            'Authorization': `Bearer ${token}`,
-          };
           const request = new Request(apiUrl, {
             method: 'GET',
-            headers: new Headers(customHeaders),
           });
           const fetchOptions = {
             agent: new https.Agent({ rejectUnauthorized: false }),
