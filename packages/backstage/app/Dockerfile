@@ -7,4 +7,4 @@ COPY packages/backstage/app/conf.template /etc/nginx/templates/default.conf.temp
 COPY packages/backstage/app/inject-config.sh /docker-entrypoint.d/40-inject-config.sh
 RUN chmod 0755 /docker-entrypoint.d/40-inject-config.sh
 
-ENV PORT 3000
+ENV PORT 3000 
