@@ -23,5 +23,5 @@ subjects:
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: custom-cluster-role
+  name: {{ .Chart.Name }}-cr
   apiGroup: rbac.authorization.k8s.io
