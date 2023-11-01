@@ -7,7 +7,6 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: /home/runner/work/kndp/kndp
 
 env:
   REGISTRY: ghcr.io
@@ -67,30 +66,21 @@ jobs:
       - name: Reveal release_version
         run: echo $release_version
 
-
       - name: Prepare metadata
         id: metadata
         run: git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 }' | uniq > build.txt;
-      - name: Prepare backstage metadata
-        run: git diff --name-only HEAD~1 HEAD | awk -F'/' 'NF >= 2 { print $1 "/" $2 "/" $3 }' | uniq > backstage.txt;
 
       - name: Build images
         id: build
-        run: cat backstage.txt | xargs -I{} bash -c '[ -f {}/*/Dockerfile ] && docker build -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version -f {}/Dockerfile . && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true'
+        run: cat build.txt | xargs -I{} bash -c '[ -d {} ] && dirname $(find {} -name Dockerfile)' | xargs -I{} docker build -f {}/Dockerfile . -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true
 
-      - name: Package with release branch version
-        id: pack-kndp-coponents
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a -f {}/Dockerfile ] && chart_name=$(basename $(dirname {}/charts/*/Chart.yaml)) && chart_version=$(helm search repo kndp --version "=> ${release_version},<$(semver -i minor "$release_version")" | grep $chart_name | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version") && helm package {}/charts/${chart_name} --version ${incremented:-${release_version}} -u  --app-version $release_version -d ./all-charts/${chart_name}-${incremented:-${release_version}} || true';
-
-      - name: Package backstage
-        id: package-backstage
-        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts -a ! -f {}/Dockerfile ] && for chart_dir in {}/charts/*/; do chart_name=$(basename "$chart_dir/Chart.yaml"); chart_version=$(helm search repo kndp --version "=> ${release_version},<$(semver -i minor "$release_version")" | grep "$chart_name" | head -1 | awk "{print \$2}"); incremented=$(semver -i patch "$chart_version"); helm package "$chart_dir" --version "${incremented:-${release_version}}" -u --app-version "${release_version}" -d "./all-charts/${chart_name}-${incremented:-${release_version}}"; done' || true
-
+      - name: Package all charts
+        id: package
+        run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts ] && for chart_dir in {}/charts/*/; do chart_version=$(helm search repo kndp --version "=> ${release_version},<$(semver -i minor "$release_version")" | grep $(basename $chart_dir) | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version"); helm package  $chart_dir --version ${incremented:-${release_version}} -u --app-version ${release_version} -d ./all-charts/$(basename $chart_dir)-${incremented:-${release_version}}; done || true'; 
 
       - name: Build website
         working-directory: /home/runner/work/kndp/kndp/website
         run: npx nx run website:build
-
 
       - name: Install chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
