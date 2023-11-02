@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+    name: {{ .Release.Name }}-dashboards-grafana
+data:
+  example-dashboard.json: |
+                        {
+                            "annotations": {
+                                "list": [
+                                {
+                                    "builtIn": 1,
+                                    "datasource": {
+                                    "type": "grafana",
+                                    "uid": "-- Grafana --"
+                                    },
+                                    "enable": true,
+                                    "hide": true,
+                                    "iconColor": "rgba(0, 211, 255, 1)",
+                                    "name": "Annotations & Alerts",
+                                    "type": "dashboard"
+                                }
+                                ]
+                            },
+                            "editable": true,
+                            "fiscalYearStartMonth": 0,
+                            "graphTooltip": 0,
+                            "links": [],
+                            "liveNow": false,
+                            "panels": [
+                                {
+                                "datasource": {
+                                    "type": "loki",
+                                    "uid": "P8E80F9AEF21F6940"
+                                },
+                                "fieldConfig": {
+                                    "defaults": {
+                                    "custom": {
+                                        "align": "auto",
+                                        "cellOptions": {
+                                        "type": "auto"
+                                        },
+                                        "inspect": false
+                                    },
+                                    "mappings": [],
+                                    "thresholds": {
+                                        "mode": "absolute",
+                                        "steps": [
+                                        {
+                                            "color": "green",
+                                            "value": null
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 80
+                                        }
+                                        ]
+                                    }
+                                    },
+                                    "overrides": []
+                                },
+                                "gridPos": {
+                                    "h": 8,
+                                    "w": 12,
+                                    "x": 0,
+                                    "y": 0
+                                },
+                                "id": 1,
+                                "options": {
+                                    "cellHeight": "sm",
+                                    "footer": {
+                                    "countRows": false,
+                                    "fields": "",
+                                    "reducer": [
+                                        "sum"
+                                    ],
+                                    "show": false
+                                    },
+                                    "showHeader": true
+                                },
+                                "pluginVersion": "10.1.5",
+                                "targets": [
+                                    {
+                                    "datasource": {
+                                        "type": "loki",
+                                        "uid": "P8E80F9AEF21F6940"
+                                    },
+                                    "editorMode": "builder",
+                                    "expr": "{cluster=\"kndp-loki\", $app=\"gateway\"} |= ``",
+                                    "queryType": "range",
+                                    "refId": "A"
+                                    }
+                                ],
+                                "title": "Panel Title",
+                                "type": "table"
+                                }
+                            ],
+                            "refresh": "",
+                            "schemaVersion": 38,
+                            "style": "dark",
+                            "tags": [],
+                            "templating": {
+                                "list": [
+                                {
+                                    "current": {
+                                    "selected": true,
+                                    "text": "app_kubernetes_io_component",
+                                    "value": "app_kubernetes_io_component"
+                                    },
+                                    "datasource": {
+                                    "type": "loki",
+                                    "uid": "P8E80F9AEF21F6940"
+                                    },
+                                    "definition": "",
+                                    "hide": 0,
+                                    "includeAll": false,
+                                    "label": "",
+                                    "multi": false,
+                                    "name": "app",
+                                    "options": [],
+                                    "query": {
+                                    "label": "",
+                                    "refId": "LokiVariableQueryEditor-VariableQuery",
+                                    "stream": "",
+                                    "type": 0
+                                    },
+                                    "refresh": 1,
+                                    "regex": "",
+                                    "skipUrlSync": false,
+                                    "sort": 0,
+                                    "type": "query"
+                                }
+                                ]
+                            },
+                            "time": {
+                                "from": "now-6h",
+                                "to": "now"
+                            },
+                            "timepicker": {},
+                            "timezone": "",
+                            "title": "Loki",
+                            "uid": "d2c45afc-d8f9-4982-8b4c-27b78b364329",
+                            "version": 1,
+                            "weekStart": ""
+                        }
