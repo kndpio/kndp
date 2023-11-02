@@ -18,3 +18,4 @@ WORKDIR /packages
 COPY --from=build /packages/packages/kndp/charts/kndp/files /packages
 EXPOSE 3000
 CMD ["node", "/packages/backend.js"] 
+ 
