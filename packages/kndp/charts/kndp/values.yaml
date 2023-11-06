@@ -127,13 +127,12 @@ grafana:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/default
-
+  env:
+    GF_SERVER_SERVE_FROM_SUB_PATH: true
   dashboardsConfigMaps:
     default: '{{ .Release.Name }}-dashboards-grafana'
   adminUser: admin
   adminPassword: admin
-
-
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -146,6 +145,15 @@ grafana:
         url: http://kndp-loki.default.svc:3100
         jsonData:
           maxLines: 1000
+  ingress:
+    enabled: true
+    path: /grafana
+    pathType: ImplementationSpecific
+    hosts:
+    - kndp.local
+  grafana.ini:
+    server:
+      root_url: http://kndp.local/grafana/login
 
 loki:
   loki:
