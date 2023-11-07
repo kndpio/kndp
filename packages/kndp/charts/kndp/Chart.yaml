@@ -17,9 +17,6 @@ dependencies:
   - name: crossplane
     version: 1.13.0-rc.0.99.gf19d5d34
     repository: https://charts.crossplane.io/master/
-  - name: development-view
-    version: "~0.1.0"
-    repository: file://../../../development-view/charts/development-view
   - name: local-repo
     version: "~0.1.0"
     repository: file://../../../local-repo/charts/local-repo
