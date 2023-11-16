@@ -22,7 +22,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: argocd-application-controller
+      serviceAccountName: {{ .Chart.Name }}-sa
       initContainers:
       {{- with .Values.initContainers }}
         {{-  (toYaml .) | nindent 6}}
@@ -33,16 +33,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: ARGOCD_AUTH_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: argocd-token
-                key: argocd-token
-
-          - name: API_ENDPOINTS
-            value: '{{- join ";" .Values.apiEndpoints -}}'
-          - name: NODE_EXTRA_CA_CERTS
-            value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
+          {{- with .Values.env }}
+            {{-  (toYaml .) | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

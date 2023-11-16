@@ -34,7 +34,9 @@ argo-cd:
         mountPath: /tmp/extensions
       - name: extensions
         mountPath: /shared/app/css
-        
+    volumes: 
+      - name: extensions
+        emptyDir: {}
     extraArgs:
       - --insecure
       - --rootpath
@@ -127,3 +129,29 @@ backstage-backend:
   volumes: 
     - name: token-volume
       emptyDir: {}
+    - name: app-config-volume
+      configMap:
+        name: '{{ .Chart.Name }}-app-config-cm'
+  volumeMounts:
+    - name: app-config-volume
+      mountPath: /packages/backstage/backend
+
+  env:
+  - name: ARGOCD_AUTH_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: argocd-token
+        key: argocd-token
+  - name: API_ENDPOINTS
+    value: '{{- join ";" .Values.apiEndpoints -}}'
+  - name: NODE_EXTRA_CA_CERTS
+    value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+appConfig:
+    '/argocd/api':
+    target: http://kndp.local/argo-cd/api/v1/
+    changeOrigin: true
+    secure: false
+    headers:
+      Cookie:
+        $env: ARGOCD_AUTH_TOKEN
