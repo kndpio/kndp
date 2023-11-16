@@ -147,11 +147,12 @@ backstage-backend:
   - name: NODE_EXTRA_CA_CERTS
     value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
 
-appConfig:
-    '/argocd/api':
-    target: http://kndp.local/argo-cd/api/v1/
-    changeOrigin: true
-    secure: false
-    headers:
-      Cookie:
-        $env: ARGOCD_AUTH_TOKEN
+  appConfig:
+    proxy:
+      '/argocd/api':
+        target: http://kndp.local/argo-cd/api/v1/
+        changeOrigin: true
+        secure: false
+        headers:
+          Cookie:
+            $env: ARGOCD_AUTH_TOKEN

@@ -52,7 +52,7 @@ data:
                 #   token: ${GHE_TOKEN}
 
             proxy:
-                {{- with .Values.appConfig }}
+                {{- with .Values.appConfig.proxy }}
                     {{-  (toYaml .) | nindent 12 }}
                 {{- end }}
 

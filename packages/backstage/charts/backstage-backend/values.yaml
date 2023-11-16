@@ -31,3 +31,5 @@ initContainers: []
 volumes: []
 volumeMounts: []
 env: []
+appConfig: 
+  proxy: {}
