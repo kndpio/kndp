@@ -9,9 +9,10 @@ argo-cd:
     cm:
        ui.cssurl: "./css/generated.css"
        exec.enabled: true
+       accounts.admin: apiKey, login
 
   server:
-    replicas: 0
+    replicas: 1
     restartPolicy: Never
     extraContainers:
       - name: package
@@ -28,15 +29,12 @@ argo-cd:
         command: ["/bin/sh", "-c"]
         args: 
           - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
-    volumes: 
-      - name: extensions
-        emptyDir: {}
     volumeMounts:
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions
-
         mountPath: /shared/app/css
+        
     extraArgs:
       - --insecure
       - --rootpath
@@ -101,7 +99,6 @@ vault:
         }
 
      
-
     ingress:
       enabled: true
       hosts:
@@ -112,3 +109,21 @@ vault:
       pathType: ImplementationSpecific
       annotations: 
          kubernetes.io/ingress.class: nginx
+
+backstage-backend:
+  initContainers: 
+  - name: argocd-cli
+    image: quay.io/argoproj/argocd:v2.7.7
+    command: ["/bin/sh", "-c", "argocd --core account generate-token --account admin > /tmp/argocd-token"]
+    volumeMounts:
+      - name: token-volume
+        mountPath: /tmp
+  - name: kubectl
+    image: bitnami/kubectl
+    command: ["kubectl", "create", "secret", "generic","argocd-token", "--from-file=/tmp/argocd-token"]
+    volumeMounts: 
+    - name: token-volume
+      mountPath: /tmp
+  volumes: 
+    - name: token-volume
+      emptyDir: {}

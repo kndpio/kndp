@@ -22,13 +22,23 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ .Chart.Name }}-sa
+      serviceAccountName: argocd-application-controller
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{-  (toYaml .) | nindent 6}}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+          - name: ARGOCD_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: argocd-token
+                key: argocd-token
+
           - name: API_ENDPOINTS
             value: '{{- join ";" .Values.apiEndpoints -}}'
           - name: NODE_EXTRA_CA_CERTS
@@ -37,3 +47,11 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          volumeMounts:
+          {{- with .Values.volumeMounts }}
+            {{-  (toYaml .) | nindent 12 }}
+          {{- end }}
+      volumes:
+      {{- with .Values.volumes }}
+        {{-  (toYaml .) | nindent 8 }}
+      {{- end }}
