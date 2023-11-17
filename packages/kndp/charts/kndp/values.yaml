@@ -99,7 +99,6 @@ vault:
         storage "file" {
           path = "/vault/data"
         }
-
      
     ingress:
       enabled: true
@@ -127,15 +126,21 @@ backstage-backend:
     - name: token-volume
       mountPath: /tmp
   volumes: 
+    - name: hostpath-volume
+      hostPath:
+        path: /storage
     - name: token-volume
       emptyDir: {}
     - name: app-config-volume
       configMap:
-        name: '{{ .Chart.Name }}-app-config-cm'
+        name: backstage-backend-app-config-cm
   volumeMounts:
     - name: app-config-volume
-      mountPath: /packages/backstage/backend
-
+      mountPath: /app/app-config.yaml
+      subPath: app-config.yaml
+    - name: hostpath-volume
+      mountPath: /app/packages/backstage/backend
+      subPath: /packages/backstage/backend
   env:
   - name: ARGOCD_AUTH_TOKEN
     valueFrom:
