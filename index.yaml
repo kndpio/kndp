@@ -329,6 +329,17 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/kndp-0.1.7/kndp-0.1.7.tgz
     version: 0.1.7
+  local-repo:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-11-17T14:40:30.707595459Z"
+    description: A Helm chart for Kubernetes
+    digest: 7b0d54d424482754452bdbb794ecf696802d1b55f89644cff039657a6a94cc15
+    name: local-repo
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/local-repo-0.1.0/local-repo-0.1.0.tgz
+    version: 0.1.0
   stack-operator:
   - apiVersion: v2
     appVersion: fcd250b404bca645a38bd0b2b3b3fb2d885a8add
@@ -380,4 +391,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-08T14:15:55.044981394Z"
+generated: "2023-11-17T14:40:30.707236227Z"
