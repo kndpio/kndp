@@ -3,6 +3,16 @@ entries:
   backstage-app:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2023-11-21T09:44:04.953403775Z"
+    description: A Helm chart for Kubernetes
+    digest: 4e2952a41390562133ebbaa074425a04d038d339486625b64fa971908494add6
+    name: backstage-app
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/backstage-app-0.1.2/backstage-app-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2023-11-08T14:15:55.045365931Z"
     description: A Helm chart for Kubernetes
     digest: 989f4858fe6d809f49831b1061a315715125de5d41384815b19117bf4cfb232e
@@ -22,6 +32,16 @@ entries:
     - https://github.com/web-seven/kndp/releases/download/backstage-app-0.1.0/backstage-app-0.1.0.tgz
     version: 0.1.0
   backstage-backend:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-11-21T09:44:04.953702254Z"
+    description: A Helm chart for Kubernetes
+    digest: 7f4b52e5dba98f18231260f8dd1cceac0b0b7724b4639150afb3706cead04914
+    name: backstage-backend
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/backstage-backend-0.1.2/backstage-backend-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.0
     created: "2023-11-08T14:15:55.045632298Z"
@@ -94,6 +114,35 @@ entries:
     - https://github.com/web-seven/kndp/releases/download/cluster-operator-0.1.0/cluster-operator-0.1.0.tgz
     version: 0.1.0
   kndp:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-11-21T09:44:04.968736767Z"
+    dependencies:
+    - name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: ~4.7.1
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: ~5.38.0
+    - name: crossplane
+      repository: https://charts.crossplane.io/master/
+      version: 1.13.0-rc.0.99.gf19d5d34
+    - name: local-repo
+      repository: file://../../../local-repo/charts/local-repo
+      version: ~0.1.0
+    - name: backstage-app
+      repository: file://../../../backstage/charts/backstage-app
+      version: ~0.1.0
+    - name: backstage-backend
+      repository: file://../../../backstage/charts/backstage-backend
+      version: ~0.1.0
+    description: A Helm chart for Kubernetes
+    digest: 4c782d132f6375a72bd1ea59249b8906c66e0d741e92108c07a5abc8eb07d941
+    name: kndp
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.15/kndp-0.1.15.tgz
+    version: 0.1.15
   - apiVersion: v2
     appVersion: 0.1.0
     created: "2023-11-02T09:03:12.714563632Z"
@@ -391,4 +440,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-17T14:40:30.707236227Z"
+generated: "2023-11-21T09:44:04.953040465Z"
