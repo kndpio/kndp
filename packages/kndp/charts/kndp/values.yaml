@@ -29,7 +29,7 @@ argo-cd:
         command: ["/bin/sh", "-c"]
         args: 
           - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
-    volumeMounts:
+    volumeMounts: 
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions
@@ -121,7 +121,8 @@ backstage-backend:
         mountPath: /tmp
   - name: kubectl
     image: bitnami/kubectl
-    command: ["kubectl", "create", "secret", "generic","argocd-token", "--from-file=/tmp/argocd-token"]
+    command: ["/bin/sh", "-c", "kubectl create secret generic argocd-token --from-file=/tmp/argocd-token || true"]
+
     volumeMounts: 
     - name: token-volume
       mountPath: /tmp
@@ -140,7 +141,7 @@ backstage-backend:
       subPath: app-config.yaml
     - name: hostpath-volume
       mountPath: /app/packages/backstage/backend
-      subPath: /packages/backstage/backend
+      subPath: packages/backstage/backend
   env:
   - name: ARGOCD_AUTH_TOKEN
     valueFrom:
