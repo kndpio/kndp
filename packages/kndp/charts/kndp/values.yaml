@@ -9,9 +9,10 @@ argo-cd:
     cm:
        ui.cssurl: "./css/generated.css"
        exec.enabled: true
+       accounts.admin: apiKey, login
 
   server:
-    replicas: 0
+    replicas: 1
     restartPolicy: Never
     extraContainers:
       - name: package
@@ -28,15 +29,14 @@ argo-cd:
         command: ["/bin/sh", "-c"]
         args: 
           - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
-    volumes: 
-      - name: extensions
-        emptyDir: {}
-    volumeMounts:
+    volumeMounts: 
       - name: extensions
         mountPath: /tmp/extensions
       - name: extensions
-
         mountPath: /shared/app/css
+    volumes: 
+      - name: extensions
+        emptyDir: {}
     extraArgs:
       - --insecure
       - --rootpath
@@ -99,9 +99,7 @@ vault:
         storage "file" {
           path = "/vault/data"
         }
-
      
-
     ingress:
       enabled: true
       hosts:
@@ -112,3 +110,55 @@ vault:
       pathType: ImplementationSpecific
       annotations: 
          kubernetes.io/ingress.class: nginx
+
+backstage-backend:
+  initContainers: 
+  - name: argocd-cli
+    image: quay.io/argoproj/argocd:v2.7.7
+    command: ["/bin/sh", "-c", "argocd --core account generate-token --account admin > /tmp/argocd-token"]
+    volumeMounts:
+      - name: token-volume
+        mountPath: /tmp
+  - name: kubectl
+    image: bitnami/kubectl
+    command: ["/bin/sh", "-c", "kubectl create secret generic argocd-token --from-file=/tmp/argocd-token || true"]
+
+    volumeMounts: 
+    - name: token-volume
+      mountPath: /tmp
+  volumes: 
+    - name: hostpath-volume
+      hostPath:
+        path: /storage
+    - name: token-volume
+      emptyDir: {}
+    - name: app-config-volume
+      configMap:
+        name: backstage-backend-app-config-cm
+  volumeMounts:
+    - name: app-config-volume
+      mountPath: /app/app-config.yaml
+      subPath: app-config.yaml
+    - name: hostpath-volume
+      mountPath: /app/packages/backstage/backend
+      subPath: packages/backstage/backend
+  env:
+  - name: ARGOCD_AUTH_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: argocd-token
+        key: argocd-token
+  - name: API_ENDPOINTS
+    value: '{{- join ";" .Values.apiEndpoints -}}'
+  - name: NODE_EXTRA_CA_CERTS
+    value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+  appConfig:
+    proxy:
+      '/argocd/api':
+        target: http://kndp.local/argo-cd/api/v1/
+        changeOrigin: true
+        secure: false
+        headers:
+          Cookie:
+            $env: ARGOCD_AUTH_TOKEN

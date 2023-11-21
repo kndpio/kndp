@@ -23,17 +23,28 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ .Chart.Name }}-sa
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{-  (toYaml .) | nindent 6}}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: API_ENDPOINTS
-            value: '{{- join ";" .Values.apiEndpoints -}}'
-          - name: NODE_EXTRA_CA_CERTS
-            value: /run/secrets/kubernetes.io/serviceaccount/ca.crt
+          {{- with .Values.env }}
+            {{-  (toYaml .) | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          volumeMounts:
+          {{- with .Values.volumeMounts }}
+            {{-  (toYaml .) | nindent 12 }}
+          {{- end }}
+      volumes:
+      {{- with .Values.volumes }}
+        {{-  (toYaml .) | nindent 8 }}
+      {{- end }}
