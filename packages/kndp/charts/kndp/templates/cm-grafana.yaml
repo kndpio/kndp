@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata: 
     name: {{ .Release.Name }}-dashboards-grafana
 data:
-  example-dashboard.json: |
+  loki-dashboard.json: |
                         {
                             "annotations": {
                                 "list": [
