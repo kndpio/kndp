@@ -72,7 +72,7 @@ jobs:
 
       - name: Build images
         id: build
-        run: cat build.txt | xargs -I{} bash -c '[ -d {} ] && dirname $(find {} -name Dockerfile)' | xargs -I{} docker build -f {}/Dockerfile . -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true
+        run: cat build.txt | xargs -I{} bash -c '[ -d {} ] && dirname $(find {} -name Dockerfile)' | xargs -I{} bash -c 'docker build -f {}/Dockerfile . -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true' || true;
 
       - name: Package all charts
         id: package
