@@ -111,6 +111,59 @@ vault:
       annotations: 
          kubernetes.io/ingress.class: nginx
 
+
+grafana:
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+  env:
+    GF_SERVER_SERVE_FROM_SUB_PATH: true
+  dashboardsConfigMaps:
+    default: '{{ .Release.Name }}-dashboards-grafana'
+  adminUser: admin
+  adminPassword: admin
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        basicAuth: true
+        basicAuthUser: admin
+        url: http://kndp-loki.default.svc:3100
+        jsonData:
+          maxLines: 1000
+  ingress:
+    enabled: true
+    path: /grafana
+    pathType: ImplementationSpecific
+    hosts:
+    - kndp.local
+  grafana.ini:
+    server:
+      root_url: http://kndp.local/grafana/login
+
+loki:
+  loki:
+    auth_enabled: false
+    commonConfig:
+      replication_factor: 1
+    storage:
+      type: 'filesystem'
+  singleBinary:
+    replicas: 1
+
+
 backstage-backend:
   initContainers: 
   - name: argocd-cli
