@@ -1,4 +1,4 @@
-apiVersion: v1enabling
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Chart.Name }}-app-config-cm
