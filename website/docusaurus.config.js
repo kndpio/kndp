@@ -93,10 +93,11 @@ const config = {
 
     navbar: {
       hideOnScroll: true,
-      title: 'KNDP',
+      title: '',
       logo: {
         alt: '',
-        src: '/img/logo-draft.svg',
+        src: '/img/logo-draft-text.png',
+        srcDark: '/img/logo-draft-text-dark.png',
       },
       items: [
         { to: '/why-kndp', label: 'Why KNDP?', position: 'right' },
