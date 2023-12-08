@@ -23,7 +23,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: ' ',
   tagline: '',
-  favicon: 'img/',
+  favicon: '/img/logo-draft.png',
 
   // Set the production url of your site here
   url: 'https://kndp.io/',
