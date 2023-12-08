@@ -1,13 +1,15 @@
 #!/bin/bash
 
 function help() {
-    echo "Usage: kndp [options]"
+    echo "Usage: kndp [options] [parameters]"
     echo ""
     echo "Options:"
     echo "   help, -h             For more information about existing commands"
     echo "   install, -i          Install KNDP"
     echo "   uninstall, -u        Uninstall KNDP"
     echo ""
+    echo "Parameters:"
+    echo "   --cluster, -c        Set existing cluster or create new with given name"
 }
 
 function install_kndp() {
@@ -95,8 +97,6 @@ nodes:
   extraMounts:
   - hostPath: ./
     containerPath: /storage
-
-
 - role: control-plane
   kubeadmConfigPatches:
   - |
@@ -113,10 +113,10 @@ nodes:
     protocol: TCP
 EOF
 
-    if kind get clusters | grep "kndp"; then
-        echo "Cluster 'kndp' already exists. Skipping cluster creation."
+    if kind get clusters | grep $cluster_option; then
+        echo "Cluster $cluster_option already exists. Skipping cluster creation."
     else
-        kind create cluster --name kndp --config kind-config.yaml
+        kind create cluster --name $cluster_option --config kind-config.yaml
     fi
 
     ##########
@@ -157,17 +157,15 @@ EOF
     show_loading &
     loading_pid=$!
 
-    echo "Installing kndp chart..."
-    helm_output=$(helm install kndp kndp/kndp 2>&1)
+    echo "Installing KNDP on cluster '$cluster_option'..."
+    helm_output=$(helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
 
     wait $loading_pid
     echo $helm_output
     exit 0
-
 }
 
 function uninstall_kndp() {
-    # Uninstall KNDP
     if kind get clusters | grep -q "kndp"; then
         kind delete cluster --name kndp
         echo "KNDP cluster removed."
@@ -180,50 +178,37 @@ function uninstall_kndp() {
         fi
     fi
     exit 0
-
 }
-
-# Check for the command
-if [ "$1" == "install" ]; then
-    install_kndp
+# Kndp command options
+if [ "$1" == "install" ] || [ "$1" == "-i" ]; then
+    case "$2" in
+    "")
+        cluster_option="kndp"
+        install_kndp -c "$cluster_option"
+        ;;
+    -c | --cluster)
+        if [ -z "$3" ]; then
+            echo "Error: Cluster name cannot be empty. Please provide a valid cluster name."
+            exit 1
+        fi
+        cluster_option="$3"
+        install_kndp -c "$cluster_option"
+        ;;
+    *)
+        echo "Usage: kndp install [parameters]"
+        echo ""
+        echo "Parameters:"
+        echo "   --cluster, -c        Set existing cluster or create new with given name"
+        ;;
+    esac
     exit 0
-elif [ "$1" == "uninstall" ]; then
+elif [ "$1" == "uninstall" ] || [ "$1" == "-u" ]; then
     uninstall_kndp
     exit 0
-elif [ "$1" == "help" ]; then
+elif [ "$1" == "help" ] || [ "$1" == "-h" ]; then
     help
     exit 0
 fi
-
-# Parse command line arguments
-LONGOPTS="help,install,uninstall"
-ARGS=$(getopt -o "hiu" --long "$LONGOPTS" -n "$(basename "$0")" -- "$@")
-eval set -- "$ARGS"
-
-while true; do
-    case "$1" in
-    -h | help)
-        help
-        exit 0
-        ;;
-    -i | install)
-        echo "Installing KNDP..."
-        install_kndp
-        ;;
-
-    -u | uninstall)
-        uninstall_kndp
-        ;;
-    --)
-        shift
-        break
-        ;;
-    \?)
-        echo "Invalid option: $OPTARG" >&2
-        exit 1
-        ;;
-    esac
-done
 
 # No options provided, display help
 if [ -z "$OPTARG" ]; then
