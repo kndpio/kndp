@@ -63,12 +63,12 @@ const config = {
     },
     docs: {
       sidebar: {
-        hideable: true,
-        autoCollapseCategories: true,
+        hideable: false,
+        autoCollapseCategories: false,
       },
     },
     colorMode: {
-      defaultMode: 'dark',
+      defaultMode: 'light',
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
@@ -96,16 +96,18 @@ const config = {
       title: 'KNDP',
       logo: {
         alt: '',
-        src: '/img/',
+        src: '/img/logo-draft.svg',
       },
       items: [
+        { to: '/why-kndp', label: 'Why KNDP?', position: 'right' },
         {
           type: 'doc',
-          position: 'left',
-          docId: 'introduction',
-          label: 'Docs'
+          position: 'right',
+          docId: 'overview',
+          label: 'Documentation',
         },         
-        { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/community', label: 'Community', position: 'right' },
+        { to: '/blog', label: 'Blog', position: 'right' },
         {
           href: 'https://github.com/web-seven/kndp',
           position: 'right',
@@ -115,8 +117,13 @@ const config = {
       ].filter(Boolean),
     },
     footer: {
-      style: 'dark',
-      links: [],
+      logo: {
+        alt: 'Web Seven Logo',
+        src: 'img/logo_text.png',
+        href: 'https://web7.dev',
+        width: 70,
+      },
+      copyright: `Copyright © ${new Date().getFullYear()} Web Seven SRL. Built with Docusaurus.`,
     },
   },
 };

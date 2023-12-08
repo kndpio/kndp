@@ -2,6 +2,9 @@
 id: command-reference
 title: Command Reference
 sidebar_label: Command Reference
+sidebar_position: 2
+pagination_next: null
+pagination_prev: null
 ---
 
 # Command Reference
