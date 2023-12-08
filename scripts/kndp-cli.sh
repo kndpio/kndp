@@ -157,7 +157,7 @@ EOF
     show_loading &
     loading_pid=$!
 
-    echo "Installing kndp chart..."
+    echo "Installing KNDP..."
     helm_output=$(helm install kndp kndp/kndp 2>&1)
 
     wait $loading_pid
