@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[597],{7205:t=>{t.exports=JSON.parse('{"title":"Installation","slug":"/category/installation","permalink":"/docs/category/installation","navigation":{"previous":{"title":"Getting Started","permalink":"/docs/category/getting-started"},"next":{"title":"KNDP CLI","permalink":"/docs/getting-started/cli/kndp-cli"}}}')}}]);
