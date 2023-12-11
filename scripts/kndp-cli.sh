@@ -157,8 +157,10 @@ EOF
     show_loading &
     loading_pid=$!
 
+
     echo "Installing KNDP on cluster '$cluster_option'..."
     helm_output=$(helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
+
 
     wait $loading_pid
     echo $helm_output
