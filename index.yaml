@@ -136,6 +136,41 @@ entries:
   kndp:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2023-12-11T14:31:34.162709905Z"
+    dependencies:
+    - name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: ~4.7.1
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: ~5.38.0
+    - name: crossplane
+      repository: https://charts.crossplane.io/stable
+      version: 1.14.1
+    - name: local-repo
+      repository: file://../../../local-repo/charts/local-repo
+      version: ~0.1.0
+    - name: backstage-app
+      repository: file://../../../backstage/charts/backstage-app
+      version: ~0.1.0
+    - name: backstage-backend
+      repository: file://../../../backstage/charts/backstage-backend
+      version: ~0.1.0
+    - name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~7.0.0
+    - name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ~5.36.1
+    description: A Helm chart for Kubernetes
+    digest: 7fdc4ef4646389232f3dd16cc0268d967ae650aa3fa4607bfdf6a6cf02705d59
+    name: kndp
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.19/kndp-0.1.19.tgz
+    version: 0.1.19
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2023-12-11T13:18:53.711880299Z"
     dependencies:
     - name: ingress-nginx
@@ -565,4 +600,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-11T13:18:53.68467971Z"
+generated: "2023-12-11T14:31:34.136918866Z"
