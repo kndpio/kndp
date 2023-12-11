@@ -15,7 +15,7 @@ dependencies:
     version: "~5.38.0"
     repository: https://argoproj.github.io/argo-helm
   - name: crossplane
-    version: 1.13.0-rc.0.99.gf19d5d34
+    version: "1.14.1"
     repository: https://charts.crossplane.io/master/
   - name: local-repo
     version: "~0.1.0"

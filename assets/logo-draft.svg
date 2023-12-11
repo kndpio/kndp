@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="200mm"
+   width="230mm"
    height="67mm"
-   viewBox="0 0 200 67"
+   viewBox="0 0 230 67"
    version="1.1"
    id="svg5"
    xml:space="preserve"
@@ -27,9 +27,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.52676618"
-     inkscape:cx="-24.678881"
-     inkscape:cy="90.172835"
+     inkscape:zoom="1.7220869"
+     inkscape:cx="396.03111"
+     inkscape:cy="158.81893"
      inkscape:window-width="1866"
      inkscape:window-height="1044"
      inkscape:window-x="0"
@@ -46,13 +46,13 @@
          transform="translate(5.2607478,0.87182102)"><text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.2191px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:2.36096"
-           x="95.589424"
+           x="106.70195"
            y="109.77339"
            id="text369"><tspan
              sodipodi:role="line"
              id="tspan367"
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.2191px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:2.36096"
-             x="95.589424"
+             x="106.70195"
              y="109.77339">KNDP</tspan></text><path
            style="fill:#326ce5;fill-opacity:1;stroke:#326ce5;stroke-width:0.646595px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 64.359478,61.203896 27.895817,16.008494 0.0037,32.34093 -28.137646,16.16079 -3.058831,-1.79502 0.421263,-28.536876 5.861241,3.66328 v 17.583696 l 6.44736,-3.8098 V 81.315253 l 5.861233,3.516736 -0.146532,24.470661 6.593892,-3.8098 -0.146532,-24.763717 -21.540045,-12.601664 -6.154285,3.809807 -6.209245,-3.736534 z"
