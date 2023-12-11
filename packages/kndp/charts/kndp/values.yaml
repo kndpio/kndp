@@ -5,6 +5,10 @@ argo-cd:
     enabled: false
   notifications:
     enabled: false
+  configs:
+    cm:
+       exec.enabled: true
+       accounts.admin: apiKey, login
 
   server:
     replicas: 1
