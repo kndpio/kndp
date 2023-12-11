@@ -5,7 +5,7 @@ WORKDIR /packages
 COPY . /packages
 RUN apk update && \
     apk add --no-cache autoconf automake libtool nasm build-base
-RUN npm install
+RUN yarn install
 RUN npx nx run kndp:build-extensions
 RUN npx nx run kndp:build-backend
 RUN npx nx run kndp:build-list
