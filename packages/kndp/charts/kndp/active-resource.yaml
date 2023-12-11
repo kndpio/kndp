@@ -2,7 +2,7 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
   annotations:
-        "helm.sh/hook": post-install
+    "helm.sh/hook": post-install
   name: releases.kndp.io
 spec:
   group: kndp.io
@@ -15,10 +15,10 @@ spec:
       referenceable: true
       schema:
         openAPIV3Schema:
-          type: object 
+          type: object
           properties:
             spec:
-              type: object 
+              type: object
               properties:
                 name:
                   type: string
