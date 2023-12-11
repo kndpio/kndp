@@ -5,38 +5,10 @@ argo-cd:
     enabled: false
   notifications:
     enabled: false
-  configs:
-    cm:
-       ui.cssurl: "./css/generated.css"
-       exec.enabled: true
-       accounts.admin: apiKey, login
 
   server:
     replicas: 1
     restartPolicy: Never
-    extraContainers:
-      - name: package
-        image: ghcr.io/kndpio/kndp/kndp
-        env:
-          - name: "PATHS"
-            value: "/shared/app/css"
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-         - name: extensions
-           mountPath: /shared/app/css
-         - name: extensions
-           mountPath: /tmp/extensions
-        command: ["/bin/sh", "-c"]
-        args: 
-          - cp -r /packages/* /tmp/extensions/ && node /tmp/extensions/backend/backend.js
-    volumeMounts: 
-      - name: extensions
-        mountPath: /tmp/extensions
-      - name: extensions
-        mountPath: /shared/app/css
-    volumes: 
-      - name: extensions
-        emptyDir: {}
     extraArgs:
       - --insecure
       - --rootpath
@@ -76,41 +48,6 @@ ingress-nginx:
     extraArgs:
       publish-status-address: localhost
       enable-ssl-passthrough: true
-
-vault:
-  server:
-    enabled: true
-    standalone:
-      enabled: true
-      config: |
-        ui = true
-
-        listener "tcp" {
-          tls_disable = 1
-          address = "[::]:8200"
-          cluster_address = "[::]:8201"
-
-          custom_response_headers {
-            "default" = {
-              "Content-Security-Policy" = ["frame-ancestors 'self' http://kndp.local/argo-cd"]
-            }
-          }
-        }
-        storage "file" {
-          path = "/vault/data"
-        }
-     
-    ingress:
-      enabled: true
-      hosts:
-      - host: kndp.local
-        paths:
-        - /ui
-        - /v1
-      pathType: ImplementationSpecific
-      annotations: 
-         kubernetes.io/ingress.class: nginx
-
 
 grafana:
   dashboardProviders:
