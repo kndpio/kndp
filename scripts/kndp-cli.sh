@@ -138,7 +138,7 @@ EOF
     echo "Adding kndp repository..."
     helm repo add kndp https://kndp.io
     echo "Updating kndp repository..."
-    helm repo up kndp
+    helm repo up kndp &>/dev/null
 
     count=0
     total=41
@@ -161,15 +161,7 @@ EOF
 
     echo "Installing KNDP on cluster '$cluster_option'..."
 
-    # Check if kndp.yaml file exists and is not empty
-    if [ -s "kndp.yaml" ]; then
-        echo "Using values from kndp.yaml for Helm install..."
-        helm_output=$(helm install kndp kndp/kndp -f kndp.yaml --kube-context "kind-$cluster_option" 2>&1)
-    else
-        helm_output=$(helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
-    fi
-
-    echo "Helm output: $helm_output"
+    helm_output=$(helm install kndp kndp/kndp -f kndp.yaml --kube-context "kind-$cluster_option" 2>&1)
 
     wait $loading_pid
     echo $helm_output
@@ -179,8 +171,6 @@ EOF
 function upgrade_kndp() {
     echo "Updating kndp repository..."
     helm repo up kndp
-
-    echo "Checking for kndp.yaml for upgrade..."
 
     if [ -s "kndp.yaml" ]; then
         echo "Using values from kndp.yaml for upgrade..."
