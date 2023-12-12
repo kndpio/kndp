@@ -34,7 +34,7 @@ curl -sSf https://raw.githubusercontent.com/kndpio/kndp/release/0.1/scripts/inst
 
 ## Documentation
 
-For detailed documentation, tutorials, and guides, please visit our [official documentation](https://kndp.io/docs/introduction).
+For detailed documentation, tutorials, and guides, please visit our [official documentation](https://kndp.io/docs/overview).
 
 ## Contributing
 
