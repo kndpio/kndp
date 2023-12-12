@@ -31,6 +31,8 @@ Options:
 - `help`, `-h`: Display a list of available commands and options. ❓
 - `install`, `-i`: Install KNDP platform on your system.
 - `uninstall`, `-u`: Uninstall KNDP platform from your system.
+- `upgrade`: upgrade KNDP platform.
+
 ```
 
 We encourage you to explore and experiment with KNDP CLI to discover all its capabilities. 🧑‍💻
