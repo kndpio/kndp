@@ -159,10 +159,17 @@ EOF
     show_loading &
     loading_pid=$!
 
-
     echo "Installing KNDP on cluster '$cluster_option'..."
-    helm_output=$(helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
 
+    # Check if kndp.yaml file exists and is not empty
+    if [ -s "kndp.yaml" ]; then
+        echo "Using values from kndp.yaml for Helm install..."
+        helm_output=$(helm install kndp kndp/kndp -f kndp.yaml --kube-context "kind-$cluster_option" 2>&1)
+    else
+        helm_output=$(helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
+    fi
+
+    echo "Helm output: $helm_output"
 
     wait $loading_pid
     echo $helm_output
@@ -172,8 +179,15 @@ EOF
 function upgrade_kndp() {
     echo "Updating kndp repository..."
     helm repo up kndp
-    echo "Upgrading kndp chart..."
-    helm upgrade kndp kndp/kndp
+
+    echo "Checking for kndp.yaml for upgrade..."
+
+    if [ -s "kndp.yaml" ]; then
+        echo "Using values from kndp.yaml for upgrade..."
+        helm upgrade kndp kndp/kndp -f kndp.yaml
+    else
+        helm upgrade kndp kndp/kndp
+    fi
 }
 
 function uninstall_kndp() {
@@ -216,7 +230,7 @@ if [ "$1" == "install" ] || [ "$1" == "-i" ]; then
 elif [ "$1" == "uninstall" ] || [ "$1" == "-u" ]; then
     uninstall_kndp
     exit 0
-elif [ "$1" == "upgrade" ];  then
+elif [ "$1" == "upgrade" ]; then
     upgrade_kndp
     exit 0
 elif [ "$1" == "help" ] || [ "$1" == "-h" ]; then
