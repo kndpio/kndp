@@ -1,0 +1,91 @@
+app:
+  title: Scaffolded Backstage App
+  baseUrl: http://localhost:3000
+organization:
+  name: My Company
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  csp:
+      connect-src: ["'self'", 'http:', 'https:']
+      # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+      # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+      origin: http://localhost:3000
+      methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+      credentials: true
+  database:
+      client: better-sqlite3
+      connection: ':memory:'
+  reading:
+      allow:
+      - host: kubernetes.default.svc
+integrations:
+    github:
+      - host: github.com
+        token: ${GITHUB_TOKEN}  
+proxy:
+    {{- with .Values.appConfig.proxy }}
+        {{-  (toYaml .) | nindent 2 }}
+    {{- end }}
+
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generator:
+    runIn: 'docker' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+auth: {}
+# see https://backstage.io/docs/auth/ to learn about auth providers
+providers: {}
+
+scaffolder: {}
+# see https://backstage.io/docs/features/software-templates/configuration for software template options
+catalog:
+    import:
+        entityFilename: catalog-info.yaml
+        pullRequestBranchName: backstage-integration
+    rules:
+        - allow: [Component, System, API, Resource, Location]
+    locations:
+        # Local example data, file locations are relative to the backend process, typically `packages/backend`
+        - type: file
+          target: ../examples/entities.yaml
+
+        # Local example template
+        - type: file
+          target: ../examples/template/template.yaml
+          rules:
+              - allow: [Template]
+
+        # Local example organizational data
+        - type: file
+          target: ../examples/org.yaml
+          rules:
+              - allow: [User, Group]
+
+        ## Uncomment these lines to add more example data
+        # - type: url
+        #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+
+        ## Uncomment these lines to add an example org
+        # - type: url
+        #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+        #   rules:
+        #     - allow: [User, Group]
+
+kubernetes:
+  serviceLocatorMethod:
+      type: 'multiTenant'
+  clusterLocatorMethods:
+      - type: 'config'
+        clusters:
+            - url: https://kubernetes.default.svc
+              name: kndp 
+              authProvider: 'serviceAccount'
+              skipTLSVerify: true
+              customResources:
+                  - group: 'kndp.io'
+                    apiVersion: 'v1alpha1'
+                    plural: 'releases'
