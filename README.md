@@ -1,7 +1,4 @@
 # Kubernetes Native Development Platform (KNDP)
-
-![KNDP Logo](./website/static/logo-transparent-small.png)
-
 ## Overview
 
 The Kubernetes Native Development Platform (KNDP) is an innovative platform designed to streamline the development, deployment, and management of applications in a Kubernetes-native environment.
@@ -17,26 +14,27 @@ The Kubernetes Native Development Platform (KNDP) is an innovative platform desi
 
 ### Prerequisites
 
-- Kubernetes cluster (v1.18+ recommended)
+- Kubernetes cluster (v1.24+ recommended)
 - `kubectl` command-line tool
+- `Helm 3+` command-line tool
 
 ### Installation
 
 ```bash
-kubectl apply -f https://path-to-kndp-installation-file.yaml
+curl -sSf https://raw.githubusercontent.com/kndpio/kndp/release/0.1/scripts/install.sh | sudo sh
 ```
 
 ### Quick Start
 
-1. Deploy your first application:
-    `kubectl apply -f ./examples/hello-world.yaml`
+1. Install platform lcoally:
+    `kndp install`
 
-2. Access the application:
-    `kubectl get svc hello-world`
+2. Remove platform:
+    `kndp uninstall`
 
 ## Documentation
 
-For detailed documentation, tutorials, and guides, please visit our [official documentation](https://kndp.io/docs/introduction).
+For detailed documentation, tutorials, and guides, please visit our [official documentation](https://kndp.io/docs/overview).
 
 ## Contributing
 

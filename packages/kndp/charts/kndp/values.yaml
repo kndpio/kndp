@@ -138,9 +138,7 @@ backstage-backend:
   - name: app-config-volume
     mountPath: /app/app-config.yaml
     subPath: app-config.yaml
-  - name: hostpath-volume
-    mountPath: /app/packages/backstage/backend
-    subPath: packages/backstage/backend
+
   env:
   - name: ARGOCD_AUTH_TOKEN
     valueFrom:
