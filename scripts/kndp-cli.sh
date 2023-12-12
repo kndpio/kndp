@@ -161,7 +161,7 @@ EOF
 
     echo "Installing KNDP on cluster '$cluster_option'..."
 
-    helm_output=$(helm install kndp kndp/kndp -f kndp.yaml --kube-context "kind-$cluster_option" 2>&1)
+    helm_output=$(test -s "kndp.yaml" && helm install kndp kndp/kndp -f kndp.yaml --kube-context "kind-$cluster_option" 2>&1 || helm install kndp kndp/kndp --kube-context "kind-$cluster_option" 2>&1)
 
     wait $loading_pid
     echo $helm_output
@@ -172,12 +172,8 @@ function upgrade_kndp() {
     echo "Updating kndp repository..."
     helm repo up kndp
 
-    if [ -s "kndp.yaml" ]; then
-        echo "Using values from kndp.yaml for upgrade..."
-        helm upgrade kndp kndp/kndp -f kndp.yaml
-    else
-        helm upgrade kndp kndp/kndp
-    fi
+    test -s "kndp.yaml" && helm upgrade kndp kndp/kndp -f kndp.yaml || helm upgrade kndp kndp/kndp
+
 }
 
 function uninstall_kndp() {
