@@ -7,6 +7,8 @@ function help() {
     echo "   help, -h             For more information about existing commands"
     echo "   install, -i          Install KNDP"
     echo "   uninstall, -u        Uninstall KNDP"
+    echo "   upgrade              Upgrade KNDP"
+
     echo ""
     echo "Parameters:"
     echo "   --cluster, -c        Set existing cluster or create new with given name"
@@ -167,6 +169,13 @@ EOF
     exit 0
 }
 
+function upgrade_kndp() {
+    echo "Updating kndp repository..."
+    helm repo up kndp
+    echo "Upgrading kndp chart..."
+    helm upgrade kndp kndp/kndp
+}
+
 function uninstall_kndp() {
     if kind get clusters | grep -q "kndp"; then
         kind delete cluster --name kndp
@@ -206,6 +215,9 @@ if [ "$1" == "install" ] || [ "$1" == "-i" ]; then
     exit 0
 elif [ "$1" == "uninstall" ] || [ "$1" == "-u" ]; then
     uninstall_kndp
+    exit 0
+elif [ "$1" == "upgrade" ];  then
+    upgrade_kndp
     exit 0
 elif [ "$1" == "help" ] || [ "$1" == "-h" ]; then
     help
