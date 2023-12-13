@@ -1,4 +1,5 @@
 argo-cd:
+  enabled: true
   dex:
     enabled: false
   applicationSet:
@@ -27,6 +28,7 @@ argo-cd:
         kubernetes.io/ingress.class: nginx
 
 ingress-nginx:
+  enabled: true
   controller:
     updateStrategy:
       type: RollingUpdate
@@ -54,6 +56,7 @@ ingress-nginx:
       enable-ssl-passthrough: true
 
 grafana:
+  enabled: true
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -95,6 +98,7 @@ grafana:
       root_url: http://kndp.local/grafana/login
 
 loki:
+  enabled: true
   loki:
     auth_enabled: false
     commonConfig:
@@ -106,6 +110,7 @@ loki:
 
 
 backstage-backend:
+  enabled: true
   initContainers:
   - name: argocd-cli
     image: quay.io/argoproj/argocd:v2.7.7

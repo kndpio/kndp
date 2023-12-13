@@ -11,24 +11,32 @@ dependencies:
   - name: ingress-nginx
     repository: https://kubernetes.github.io/ingress-nginx
     version: "~4.7.1"
+    condition: ingress-nginx.enabled
   - name: argo-cd
     version: "~5.38.0"
     repository: https://argoproj.github.io/argo-helm
+    condition: argo-cd.enabled
   - name: crossplane
     version: "1.14.1"
     repository: https://charts.crossplane.io/stable
+    condition: crossplane.enabled
   - name: local-repo
     version: "~0.1.0"
     repository: file://../../../local-repo/charts/local-repo
+    condition: local-repo.enabled
   - name: backstage-app
     version: "~0.1.0"
     repository: file://../../../backstage/charts/backstage-app
+    condition: backstage-app.enabled
   - name: backstage-backend
     version: "~0.1.0"
     repository: file://../../../backstage/charts/backstage-backend
+    condition: backstage-backend.enabled
   - name: grafana
     version: "~7.0.0"
     repository: https://grafana.github.io/helm-charts
+    condition: grafana.enabled
   - name: loki
     version: "~5.36.1"
     repository: https://grafana.github.io/helm-charts
+    condition: loki.enabled
