@@ -1,0 +1,39 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: meals.kndp.io
+spec:
+  group: kndp.io
+  names:
+    kind: Meal
+    plural: meals
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              employeeRefs:
+                type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: string
+                  type: object
+              dueOrderTime:
+                type: string
+              dueTakeTime:
+                type: string
+              deliveryTime:
+                type: string
+              status:
+                type: string
+
+
