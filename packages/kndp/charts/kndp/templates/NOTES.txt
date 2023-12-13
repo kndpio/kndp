@@ -1,1 +1,0 @@
-Installation succeded! Kind reminder to to log out and log back in to apply changes and run Docker without 'sudo'
