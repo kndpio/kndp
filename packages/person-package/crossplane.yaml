@@ -1,7 +1,0 @@
-apiVersion: meta.pkg.crossplane.io/v1alpha1
-kind: Configuration
-metadata:
-  name: person-configuration
-spec:
-  crossplane:
-    version: ">=v1.12.1-0"
