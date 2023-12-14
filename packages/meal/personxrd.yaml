@@ -1,0 +1,28 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: persons.kndp.io
+spec:
+  group: kndp.io
+  names:
+    kind: Person
+    plural: persons
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              name:
+                type: string
+              slackNickname:
+                type: string
+              status:
+                type: string
+
+
