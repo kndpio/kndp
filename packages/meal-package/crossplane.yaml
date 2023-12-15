@@ -1,7 +1,5 @@
-apiVersion: meta.pkg.crossplane.io/v1alpha1
-kind: Configuration
+apiVersion: meta.pkg.crossplane.io/v1beta1
+kind: Function
 metadata:
-  name: meal-configuration
-spec:
-  crossplane:
-    version: ">=v1.12.1-0"
+  name: function-meal
+spec: {}
