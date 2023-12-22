@@ -1,3 +1,10 @@
 go 1.21.5
 
-use ./packages/meal-package/composition-function
+use (
+	./packages/cluster/src
+	./packages/local-repo/src
+	./packages/meal/function
+	./packages/meal/slack-cronjob
+	./packages/meal/slack-deployment
+	./packages/stack/src
+)

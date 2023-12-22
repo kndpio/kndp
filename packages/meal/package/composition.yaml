@@ -1,0 +1,13 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: meal-composition
+spec:
+  compositeTypeRef:
+    apiVersion: kndp.io/v1alpha1
+    kind: Meal
+  mode: Pipeline
+  pipeline:
+  - step: run-function-meal
+    functionRef:
+      name: function-meal

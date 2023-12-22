@@ -1,0 +1,8 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-kubernetes
+spec:
+  package: "crossplanecontrib/provider-kubernetes:main"
+  runtimeConfigRef:
+    name: custom-runtime  
