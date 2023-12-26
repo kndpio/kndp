@@ -1,24 +1,25 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
+
+	ctrl "sigs.k8s.io/controller-runtime"
 
 	"github.com/slack-go/slack"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
 )
-
-func main() {
-	slackBot()
-}
 
 type EmployeeRef struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
 }
+
 type Meal struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -32,9 +33,52 @@ type Meal struct {
 }
 
 var api = slack.New(os.Getenv("SLACK_API_TOKEN"))
-var mealName = os.Getenv("MEAL_NAME")
 
-func slackBot() {
+func readEmployeeRefs(dynamicClient dynamic.Interface, ctx context.Context, group, version, resource, namespace string) ([]EmployeeRef, error) {
+	resourceId := schema.GroupVersionResource{
+		Group:    group,
+		Version:  version,
+		Resource: resource,
+	}
+
+	list, err := dynamicClient.Resource(resourceId).Namespace(namespace).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("error getting resources: %v", err)
+	}
+
+	var employeeRefs []EmployeeRef
+	for _, item := range list.Items {
+		meal := Meal{}
+		if err := runtime.DefaultUnstructuredConverter.FromUnstructured(item.Object, &meal); err != nil {
+			return nil, fmt.Errorf("error converting Unstructured to Meal: %v", err)
+		}
+		employeeRefs = append(employeeRefs, meal.Spec.EmployeeRefs...)
+	}
+	fmt.Println(employeeRefs)
+	return employeeRefs, nil
+}
+
+func shouldSendMessage(employeeRefs []EmployeeRef, userName string) bool {
+	// Check if the user should receive a message based on status
+	for _, employeeRef := range employeeRefs {
+		if employeeRef.Name == userName {
+			return employeeRef.Status == ""
+		}
+	}
+	return true
+}
+
+func main() {
+	ctx := context.Background()
+	config := ctrl.GetConfigOrDie()
+	dynamicClient := dynamic.NewForConfigOrDie(config)
+
+	employeeRefs, err := readEmployeeRefs(dynamicClient, ctx, "kndp.io", "v1alpha1", "meals", "")
+	if err != nil {
+		fmt.Printf("Error reading employee references: %s\n", err)
+		return
+	}
+
 	options := []slack.GetUsersOption{
 		slack.GetUsersOptionLimit(1000),
 	}
@@ -71,12 +115,6 @@ func slackBot() {
 		Ts:            "",
 	}
 
-	employeeRefs, err := readEmployeeRefs()
-	if err != nil {
-		fmt.Printf("Error reading employee references: %s\n", err)
-		return
-	}
-
 	for _, user := range users {
 		userID := user.ID
 		userName := user.Name
@@ -96,32 +134,4 @@ func slackBot() {
 			fmt.Printf("Message sent to user %s (%s) in channel %s\n", userName, userID, channelID)
 		}
 	}
-
-}
-func readEmployeeRefs() ([]EmployeeRef, error) {
-	// Read employeeRefs status from Meal object
-	cmd := exec.Command("/usr/local/bin/kubectl", "get", "meal", mealName, "-o", "json")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf("error running kubectl command: %v", err)
-	}
-
-	var meal Meal
-	err = json.Unmarshal(output, &meal)
-	if err != nil {
-		return nil, fmt.Errorf("error unmarshalling JSON: %v", err)
-	}
-
-	fmt.Println(meal.Spec.EmployeeRefs)
-	return meal.Spec.EmployeeRefs, nil
-}
-
-func shouldSendMessage(employeeRefs []EmployeeRef, userName string) bool {
-	// Check if user should receive a message based on status
-	for _, employeeRef := range employeeRefs {
-		if employeeRef.Name == userName {
-			return employeeRef.Status == ""
-		}
-	}
-	return true
 }

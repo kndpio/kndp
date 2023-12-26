@@ -1,18 +1,20 @@
 package main
 
 import (
-	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
-	"os/exec"
 
 	"github.com/slack-go/slack"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"net/url"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 type SelectedOptionValue struct {
@@ -33,6 +35,7 @@ type EmployeeRef struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
 }
+
 type Meal struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -48,17 +51,36 @@ type Meal struct {
 var api = slack.New(os.Getenv("SLACK_API_TOKEN"))
 var mealName = os.Getenv("MEAL_NAME")
 
-func patchEmployeeRefStatus(user, selectedOption string) error {
-	// Read employeeRefs status from Meal object
-	cmd := exec.Command("kubectl", "get", "meal", mealName, "-o", "json")
-	output, err := cmd.CombinedOutput()
+func handleEventsEndpoint(w http.ResponseWriter, r *http.Request, dynamicClient dynamic.Interface, ctx context.Context) {
+	payload, err := url.QueryUnescape(r.FormValue("payload"))
 	if err != nil {
-		return fmt.Errorf("error running kubectl command: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println("Error decoding payload:", err)
+		return
 	}
-	var meal Meal
-	err = json.Unmarshal(output, &meal)
+
+	var data SelectedOptionValue
+	err = json.Unmarshal([]byte(payload), &data)
 	if err != nil {
-		return fmt.Errorf("error unmarshalling JSON: %v", err)
+		fmt.Println("Error decoding JSON:", err)
+		return
+	}
+
+	selectedOption := data.Actions[0].SelectedOptions[0].Value
+	user := data.User.Name
+	userID := data.User.ID
+	respondMsg(userID, user)
+
+	err = patchEmployeeRefStatus(user, selectedOption, dynamicClient, ctx)
+	if err != nil {
+		fmt.Println("Error patching EmployeeRef status:", err)
+	}
+}
+
+func patchEmployeeRefStatus(user, selectedOption string, dynamicClient dynamic.Interface, ctx context.Context) error {
+	meal, err := getMealResource(dynamicClient, ctx, mealName)
+	if err != nil {
+		return fmt.Errorf("error getting Meal resource: %v", err)
 	}
 
 	foundUser := false
@@ -78,56 +100,80 @@ func patchEmployeeRefStatus(user, selectedOption string) error {
 		meal.Spec.EmployeeRefs = append(meal.Spec.EmployeeRefs, newEmployeeRef)
 	}
 
-	fmt.Println(meal.Spec.EmployeeRefs)
-
-	updatedMealJSON, err := json.Marshal(meal)
-	if err != nil {
-		return fmt.Errorf("error marshalling JSON: %v", err)
+	obj := createMealUnstructuredObject(meal)
+	applyOptions := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: "meal-system",
 	}
 
-	cmd = exec.Command("kubectl", "apply", "-f", "-")
-	cmd.Stdin = bytes.NewReader(updatedMealJSON)
-	output, err = cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("error applying kubectl patch: %v", err)
-	}
-
-	fmt.Println(string(output))
+	ApplyResource(ctx, dynamicClient, "kndp.io", "v1alpha1", "meals", "", mealName, obj, applyOptions)
+	fmt.Println(err)
 
 	return nil
 }
-func events() {
 
-	http.HandleFunc("/events-endpoint", func(w http.ResponseWriter, r *http.Request) {
-		payload, err := url.QueryUnescape(r.FormValue("payload"))
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Println("Error decoding payload:", err)
-			return
-		}
-		var data SelectedOptionValue
-		err = json.Unmarshal([]byte(payload), &data)
-		if err != nil {
-			fmt.Println("Error decoding JSON:", err)
-			return
-		}
+func createMealUnstructuredObject(meal *Meal) *unstructured.Unstructured {
+	return &unstructured.Unstructured{
+		Object: map[string]interface{}{
+			"apiVersion": "kndp.io/v1alpha1",
+			"kind":       "Meal",
+			"metadata": map[string]interface{}{
+				"name": mealName,
+			},
+			"spec": map[string]interface{}{
+				"employeeRefs": meal.Spec.EmployeeRefs,
+			},
+		},
+	}
+}
 
-		selected_option := data.Actions[0].SelectedOptions[0].Value
-		user := data.User.Name
-		userID := data.User.ID
-		respondMsg(userID, user)
+func getMealResource(dynamicClient dynamic.Interface, ctx context.Context, name string) (*Meal, error) {
+	items, err := GetResources(dynamicClient, ctx, "kndp.io", "v1alpha1", "meals", "")
+	if err != nil {
+		return nil, err
+	}
 
-		err = patchEmployeeRefStatus(user, selected_option)
-		if err != nil {
-			fmt.Println("Error patching EmployeeRef status:", err)
+	for _, item := range items {
+		if item.GetName() == name {
+			meal := &Meal{}
+			if err := runtime.DefaultUnstructuredConverter.FromUnstructured(item.Object, meal); err != nil {
+				return nil, fmt.Errorf("error converting Unstructured to Meal: %v", err)
+			}
+			return meal, nil
 		}
-	})
-	fmt.Println("[INFO] Server listening")
-	http.ListenAndServe(":3000", nil)
+	}
+
+	return nil, fmt.Errorf("Meal resource with name %s not found", name)
+}
+
+func GetResources(dynamic dynamic.Interface, ctx context.Context, group string, version string, resource string, namespace string) ([]unstructured.Unstructured, error) {
+	resourceId := schema.GroupVersionResource{
+		Group:    group,
+		Version:  version,
+		Resource: resource,
+	}
+	list, err := dynamic.Resource(resourceId).Namespace(namespace).
+		List(ctx, metav1.ListOptions{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list.Items, nil
+}
+
+func ApplyResource(ctx context.Context, client dynamic.Interface, group, version, resource, namespace, name string, obj *unstructured.Unstructured, options metav1.ApplyOptions, subresources ...string) (*unstructured.Unstructured, error) {
+	resourceId := schema.GroupVersionResource{
+		Group:    group,
+		Version:  version,
+		Resource: resource,
+	}
+	resourceClient := client.Resource(resourceId).Namespace(namespace)
+
+	return resourceClient.Apply(ctx, name, obj, options, subresources...)
 }
 
 func respondMsg(userID string, userName string) {
-
 	attachment := slack.Attachment{
 		Color:         "#f9a41b",
 		Fallback:      "",
@@ -168,9 +214,17 @@ func respondMsg(userID string, userName string) {
 	}
 
 	fmt.Printf("Message sent to user %s (%s) in channel %s\n", userName, userID, channelID)
-
 }
 
 func main() {
-	events()
+	ctx := context.Background()
+	config := ctrl.GetConfigOrDie()
+	dynamicClient := dynamic.NewForConfigOrDie(config)
+
+	http.HandleFunc("/events-endpoint", func(w http.ResponseWriter, r *http.Request) {
+		handleEventsEndpoint(w, r, dynamicClient, ctx)
+	})
+
+	fmt.Println("[INFO] Server listening")
+	http.ListenAndServe(":3000", nil)
 }

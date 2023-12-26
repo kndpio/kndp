@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os/exec"
 
 	"github.com/crossplane/function-sdk-go/errors"
 	"github.com/crossplane/function-sdk-go/logging"
@@ -14,6 +13,10 @@ import (
 	"github.com/crossplane/function-sdk-go/resource/composed"
 	"github.com/crossplane/function-sdk-go/response"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 type Meal struct {
@@ -27,12 +30,12 @@ type Meal struct {
 		Status       string        `json:"status"`
 	} `json:"spec"`
 }
+
 type EmployeeRef struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
 }
 
-// Unstructured represents unstructured data.
 type Unstructured struct {
 	APIVersion string                 `json:"apiVersion"`
 	Kind       string                 `json:"kind"`
@@ -46,37 +49,53 @@ type Function struct {
 	log logging.Logger
 }
 
-func readFromObject() (string, error) {
-	// Read DueOrderTime from Meal object
-	cmd := exec.Command("kubectl", "get", "meal", "meal", "-o", "json")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("error running kubectl command: %v", err)
+func readMealResource(dynamicClient dynamic.Interface, ctx context.Context, group, version, resource, namespace string) (string, error) {
+	resourceId := schema.GroupVersionResource{
+		Group:    group,
+		Version:  version,
+		Resource: resource,
 	}
 
-	var meal Meal
-	err = json.Unmarshal(output, &meal)
+	list, err := dynamicClient.Resource(resourceId).Namespace(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
-		return "", fmt.Errorf("error unmarshalling JSON: %v", err)
+		return "", fmt.Errorf("error getting resources: %v", err)
 	}
 
-	return meal.Spec.DueOrderTime, nil
+	for _, item := range list.Items {
+		meal := Meal{}
+		if err := runtime.DefaultUnstructuredConverter.FromUnstructured(item.Object, &meal); err != nil {
+			return "", fmt.Errorf("error converting Unstructured to Meal: %v", err)
+		}
+
+		dueOrderTime := meal.Spec.DueOrderTime
+		fmt.Println(dueOrderTime)
+		return dueOrderTime, nil
+	}
+	return "", fmt.Errorf("no resources found")
 }
 
 // RunFunction adds a Deployment and the new object template to the desired state.
 func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
 	rsp := response.To(req, response.DefaultTTL)
-	dueOrderTime, _ := readFromObject()
+
+	ctx := context.Background()
+	config := ctrl.GetConfigOrDie()
+	dynamicClient := dynamic.NewForConfigOrDie(config)
+
+	dueOrderTime, err := readMealResource(dynamicClient, ctx, "kndp.io", "v1alpha1", "meals", "")
+	if err != nil {
+		fmt.Printf("Error reading employee references: %s\n", err)
+		return nil, err
+	}
 
 	if dueOrderTime == "over" {
-
 		unstructuredData := composed.Unstructured{}
 		desired, err := request.GetDesiredComposedResources(req)
 		if err != nil {
 			response.Fatal(rsp, errors.Wrapf(err, "cannot get desired resources from %T", req))
 			return rsp, nil
 		}
-		desired[resource.Name("metadata")] = &resource.DesiredComposed{Resource: &unstructuredData}
+		desired[resource.Name("")] = &resource.DesiredComposed{Resource: &unstructuredData}
 
 		if err := response.SetDesiredComposedResources(rsp, desired); err != nil {
 			response.Fatal(rsp, errors.Wrapf(err, "cannot set desired composed resources in %T", rsp))
@@ -257,7 +276,6 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 		f.log.Info("Added Deployment, Ingress, and CronJob templates to desired state")
 
-		fmt.Printf("DueOrderTime is %s\n", dueOrderTime)
 	}
 	return rsp, nil
 }
