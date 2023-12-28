@@ -8,10 +8,16 @@ spec:
       name: {{ .Chart.Name }}-sa
   deploymentTemplate:
     spec:
+      selector:
+        matchLabels:
+          app: meal-app
       template:
+        metadata:
+          labels:
+            app: meal-app
         spec:
           containers:
-            env:
-              valueFrom:
-                configMapKeyRef:
+          - name: meal-container
+            envFrom:
+              - configMapRef:
                   name: {{ .Chart.Name }}-cm

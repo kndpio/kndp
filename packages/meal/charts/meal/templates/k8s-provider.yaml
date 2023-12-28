@@ -5,4 +5,4 @@ metadata:
 spec:
   package: "crossplanecontrib/provider-kubernetes:main"
   runtimeConfigRef:
-    name: {{ .Chart.Name }}-runtime
+    name: {{ .Chart.Name }}-provider-runtime
