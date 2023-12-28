@@ -99,7 +99,7 @@ func main() {
 		Title:         "Meals",
 		TitleLink:     "Meals",
 		Pretext:       "",
-		Text:          "Do you want to order meal today? :poultry_leg:",
+		Text:          os.Getenv("SLACK_NOTIFY_MESSAGE"),
 		ImageURL:      "",
 		ThumbURL:      "",
 		ServiceName:   "",

@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata: 
-    name: kndp-meal
-data:
-    SLACK_API_TOKEN: ""
-    MEAL_NAME: "meal"

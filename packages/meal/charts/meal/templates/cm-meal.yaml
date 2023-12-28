@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+    name: {{ .Chart.Name }}-cm
+data:
+    SLACK_API_TOKEN: ""
+    MEAL_NAME: "meal"
+    HOST_NAME: ""
+    CRONJOB_IMAGE_NAME: ""
+    CRONJOB_SCHEDULE_TIME: ""
+    CRONJOB_SERVICE_ACCOUNT_NAME: ""
+    CRONJOB_NAME: ""
+    DEPLOYMENT_IMAGE_NAME: ""
+    DEPLOYMENT_NAME: ""
+    DEPLOYMENT_SERVICE_ACCOUNT_NAME: ""
+    CONFIG_MAP_NAME: ""
+    PROVIDER_CONFIG_REF_NAME: ""
+    SLACK_NOTIFY_MESSAGE: ""
+    SLACK_COLLECTOR_MESSAGE: ""
+    SLACK_COLLECTOR_URL: ""
+    SLACK_COLLECTOR_PORT: ""

@@ -1,0 +1,17 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: {{ .Chart.Name }}-function-runtime
+spec:
+  serviceAccountTemplate:
+    metadata:
+      name: {{ .Chart.Name }}-sa
+  deploymentTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            env:
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-cm

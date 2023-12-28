@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/crossplane/function-sdk-go/errors"
 	"github.com/crossplane/function-sdk-go/logging"
@@ -49,14 +50,14 @@ type Function struct {
 	log logging.Logger
 }
 
-func readMealResource(dynamicClient dynamic.Interface, ctx context.Context, group, version, resource, namespace string) (string, error) {
+func readMealResource(dynamicClient dynamic.Interface, ctx context.Context) (string, error) {
 	resourceId := schema.GroupVersionResource{
-		Group:    group,
-		Version:  version,
-		Resource: resource,
+		Group:    "kndp.io",
+		Version:  "v1alpha1",
+		Resource: "meals",
 	}
 
-	list, err := dynamicClient.Resource(resourceId).Namespace(namespace).List(ctx, metav1.ListOptions{})
+	list, err := dynamicClient.Resource(resourceId).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return "", fmt.Errorf("error getting resources: %v", err)
 	}
@@ -82,7 +83,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	config := ctrl.GetConfigOrDie()
 	dynamicClient := dynamic.NewForConfigOrDie(config)
 
-	dueOrderTime, err := readMealResource(dynamicClient, ctx, "kndp.io", "v1alpha1", "meals", "")
+	dueOrderTime, err := readMealResource(dynamicClient, ctx)
 	if err != nil {
 		fmt.Printf("Error reading employee references: %s\n", err)
 		return nil, err
@@ -129,7 +130,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 						"spec": map[string]interface{}{
 							"rules": []map[string]interface{}{
 								{
-									"host": "kndp.io",
+									"host": os.Getenv("HOST_NAME"),
 									"http": map[string]interface{}{
 										"paths": []map[string]interface{}{
 											{
@@ -160,7 +161,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			"apiVersion": "kubernetes.crossplane.io/v1alpha1",
 			"kind":       "Object",
 			"metadata": map[string]interface{}{
-				"name": "cronjob-object",
+				"name": os.Getenv("CRONJOB_NAME"),
 			},
 			"spec": map[string]interface{}{
 				"forProvider": map[string]interface{}{
@@ -168,22 +169,22 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 						"apiVersion": "batch/v1",
 						"kind":       "CronJob",
 						"metadata": map[string]interface{}{
-							"name":      "meal-cronjob",
+							"name":      os.Getenv("CRONJOB_NAME"),
 							"namespace": "default",
 						},
 						"spec": map[string]interface{}{
-							"schedule": "*/15 * * * *",
+							"schedule": os.Getenv("CRONJOB_SCHEDULE_TIME"),
 							"jobTemplate": map[string]interface{}{
 								"spec": map[string]interface{}{
 									"template": map[string]interface{}{
 										"spec": map[string]interface{}{
-											"serviceAccountName": "meal-sa",
+											"serviceAccountName": os.Getenv("CRONJOB_SERVICE_ACCOUNT_NAME"),
 											"containers": []map[string]interface{}{
 												{
 													"name":  "meal-container",
-													"image": "ghcr.io/kndpio/kndp/slack-cronjob:0.1.0",
+													"image": os.Getenv("CRONJOB_IMAGE_NAME"),
 													"envFrom": []map[string]interface{}{
-														{"configMapRef": map[string]interface{}{"name": "kndp-meal"}},
+														{"configMapRef": map[string]interface{}{"name": "meal-cm"}},
 													},
 												},
 											},
@@ -196,7 +197,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 					},
 				},
 				"managementPolicy":  "Default",
-				"providerConfigRef": map[string]interface{}{"name": "kubernetes-provider"},
+				"providerConfigRef": map[string]interface{}{"name": os.Getenv("PROVIDER_CONFIG_REF_NAME")},
 			},
 		}
 
@@ -204,7 +205,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			"apiVersion": "kubernetes.crossplane.io/v1alpha1",
 			"kind":       "Object",
 			"metadata": map[string]interface{}{
-				"name": "deployment-object",
+				"name": os.Getenv("DEPLOYMENT_NAME"),
 			},
 			"spec": map[string]interface{}{
 				"forProvider": map[string]interface{}{
@@ -212,7 +213,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 						"apiVersion": "apps/v1",
 						"kind":       "Deployment",
 						"metadata": map[string]interface{}{
-							"name":      "meal-deployment",
+							"name":      os.Getenv("DEPLOYMENT_NAME"),
 							"namespace": "default",
 						},
 						"spec": map[string]interface{}{
@@ -229,13 +230,13 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 									},
 								},
 								"spec": map[string]interface{}{
-									"serviceAccountName": "meal-sa",
+									"serviceAccountName": os.Getenv("DEPLOYMENT_SERVICE_ACCOUNT_NAME"),
 									"containers": []map[string]interface{}{
 										{
 											"name":  "meal-container",
-											"image": "ghcr.io/kndpio/kndp/slack-deployment:0.1.0",
+											"image": os.Getenv("DEPLOYMENT_IMAGE_NAME"),
 											"envFrom": []map[string]interface{}{
-												{"configMapRef": map[string]interface{}{"name": "kndp-meal"}},
+												{"configMapRef": map[string]interface{}{"name": os.Getenv("CONFIG_MAP_NAME")}},
 											},
 											"ports": []map[string]interface{}{
 												{
@@ -250,7 +251,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 					},
 				},
 				"managementPolicy":  "Default",
-				"providerConfigRef": map[string]interface{}{"name": "kubernetes-provider"},
+				"providerConfigRef": map[string]interface{}{"name": os.Getenv("PROVIDER_CONFIG_REF_NAME")},
 			},
 		}
 

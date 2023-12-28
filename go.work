@@ -4,7 +4,7 @@ use (
 	./packages/cluster/src
 	./packages/local-repo/src
 	./packages/meal/function
-	./packages/meal/slack-cronjob
-	./packages/meal/slack-deployment
+	./packages/meal/slack-notify
+	./packages/meal/slack-collector
 	./packages/stack/src
 )

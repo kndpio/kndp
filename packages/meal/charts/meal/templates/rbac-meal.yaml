@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: meal-cluster-role
+  name: {{ .Chart.Name }}-cluster-role
 rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
@@ -16,26 +16,24 @@ rules:
   resources: ["meals"]
   verbs: ["*"]
 
-
-
 ---
 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: meal-sa
+  name: {{ .Chart.Name }}-sa
 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: meal-cluster-role-binding
+  name: {{ .Chart.Name }}-cluster-role-binding
 subjects:
 - kind: ServiceAccount
-  name: meal-sa
+  name: {{ .Chart.Name }}-sa
   namespace: default
 roleRef:
   kind: ClusterRole
-  name: meal-cluster-role
+  name: {{ .Chart.Name }}-cluster-role
   apiGroup: rbac.authorization.k8s.io

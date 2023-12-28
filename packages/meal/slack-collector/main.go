@@ -186,7 +186,7 @@ func respondMsg(userID string, userName string) {
 		Title:         "",
 		TitleLink:     "",
 		Pretext:       "",
-		Text:          "Thank you",
+		Text:          os.Getenv("SLACK_COLLECTOR_MESSAGE"),
 		ImageURL:      "",
 		ThumbURL:      "",
 		ServiceName:   "",
@@ -220,11 +220,18 @@ func main() {
 	ctx := context.Background()
 	config := ctrl.GetConfigOrDie()
 	dynamicClient := dynamic.NewForConfigOrDie(config)
-
-	http.HandleFunc("/events-endpoint", func(w http.ResponseWriter, r *http.Request) {
+	url := os.Getenv("SLACK_COLLECTOR_URL")
+	port := os.Getenv("SLACK_COLLECTOR_PORT")
+	if port == "" {
+		port = "3000"
+	}
+	if url == "" {
+		url = "/events"
+	}
+	http.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		handleEventsEndpoint(w, r, dynamicClient, ctx)
 	})
 
-	fmt.Println("[INFO] Server listening")
-	http.ListenAndServe(":3000", nil)
+	fmt.Println("[INFO] Server listening on port:", port)
+	http.ListenAndServe(":"+port, nil)
 }

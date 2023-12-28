@@ -1,10 +1,10 @@
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
-  name: function-meal
+  name: {{ .Chart.Name }}-function
   # annotations:
   #   render.crossplane.io/runtime: Development
 spec:
-  package: ghcr.io/kndpio/kndp/function:0.1.0
+  package: ghcr.io/kndpio/kndp/package:0.1.0
   runtimeConfigRef:
-    name: custom-runtime  
+    name: {{ .Chart.Name }}-function-runtime
