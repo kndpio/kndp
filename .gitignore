@@ -42,3 +42,4 @@ testem.log
 yarn.lock
 package-lock.json
 go.work.sum
+packages/meal/function/go.sum

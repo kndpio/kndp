@@ -10,4 +10,4 @@ spec:
   pipeline:
   - step: run-function-meal
     functionRef:
-      name: function-meal
+      name: meal-function

@@ -19,22 +19,13 @@ ENV CGO_ENABLED=0
 # This lets us avoid re-downloading modules if we don't need to. The type=target
 # mount tells Docker to mount the current directory read-only in the WORKDIR.
 # The type=cache mount tells Docker to cache the Go modules cache across builds.
-RUN --mount=target=. --mount=type=cache,target=/go/pkg/mod go mod download
-
-# The TARGETOS and TARGETARCH args are set by docker. We set GOOS and GOARCH to
-# these values to ask Go to compile a binary for these architectures. If
-# TARGETOS and TARGETOS are different from BUILDPLATFORM, Go will cross compile
-# for us (e.g. compile a linux/amd64 binary on a linux/arm64 build machine).
-ARG TARGETOS
-ARG TARGETARCH
+COPY ./function .
 
 # Build the function binary. The type=target mount tells Docker to mount the
 # current directory read-only in the WORKDIR. The type=cache mount tells Docker
 # to cache the Go modules cache across builds.
-RUN --mount=target=. \
-    --mount=type=cache,target=/go/pkg/mod \
-    --mount=type=cache,target=/root/.cache/go-build \
-    GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /function .
+RUN go mod tidy
+RUN go build -o /function .
 
 # Produce the Function image. We use a very lightweight 'distroless' image that
 # does not include any of the build tools used in previous stages.

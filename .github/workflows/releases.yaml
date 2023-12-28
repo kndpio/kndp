@@ -79,7 +79,7 @@ jobs:
       run: cat build.txt | xargs -I{} bash -c '[ -d {} ] && dirname $(find {} -name Dockerfile)' | xargs -I{} bash -c 'docker build -f {}/Dockerfile . -t ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version && docker push ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true' || true;
 
     - name: Build and push crossplane packages
-      run: cat build.txt | xargs -I{} bash -c ' dirname $(find {} -name crossplane.yaml)' | xargs -I{} bash -c './crossplane xpkg build -f {} -o {}/$(basename {}) --embed-runtime-image ghcr.io/kndpio/kndp/function:$release_version && ./crossplane xpkg push -f {}/$(basename {}) ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true' || true;
+      run: cat build.txt | xargs -I{} bash -c ' dirname $(find {} -name crossplane.yaml)' | xargs -I{} bash -c './crossplane xpkg build -f {} -o {}/$(basename {}) --embed-runtime-image ${REGISTRY}/${{ github.repository }}/$(basename $(dirname{})):$release_version && ./crossplane xpkg push -f {}/$(basename {}) ${REGISTRY}/${{ github.repository }}/$(basename {}):$release_version || true' || true;
 
     - name: Package all charts
       id: package
