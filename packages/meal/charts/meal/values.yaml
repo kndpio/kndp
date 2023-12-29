@@ -1,0 +1,20 @@
+SLACK_API_TOKEN: ""
+MEAL_NAME: "meal"
+HOST_NAME: "kndp.io"
+CRONJOB_IMAGE_NAME: "ghcr.io/kndpio/kndp/slack-notify:0.1.0"
+CRONJOB_SCHEDULE_TIME: "*/15 * * * *"
+CRONJOB_SERVICE_ACCOUNT_NAME: "meal-sa"
+CRONJOB_NAME: "slack-notify"
+DEPLOYMENT_IMAGE_NAME: "ghcr.io/kndpio/kndp/slack-collector:0.1.0"
+DEPLOYMENT_NAME: "slack-collector"
+DEPLOYMENT_SERVICE_ACCOUNT_NAME: "meal-sa"
+CONFIG_MAP_NAME: "meal-cm"
+PROVIDER_CONFIG_REF_NAME: "meal-kubernetes-provider"
+SLACK_NOTIFY_MESSAGE: "message text"
+SLACK_COLLECTOR_MESSAGE: "message text"
+SLACK_COLLECTOR_URL: "/events"
+SLACK_COLLECTOR_PORT: "3000"
+
+function:
+    image:
+        tag: ""

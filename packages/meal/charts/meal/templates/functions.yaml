@@ -5,6 +5,6 @@ metadata:
   # annotations:
   #   render.crossplane.io/runtime: Development
 spec:
-  package: ghcr.io/kndpio/kndp/package:0.1.0
+  package: ghcr.io/kndpio/kndp/meal:{{ .Values.function.image.tag | default .Chart.AppVersion }}
   runtimeConfigRef:
     name: {{ .Chart.Name }}-function-runtime

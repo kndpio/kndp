@@ -153,7 +153,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 					},
 				},
 				"managementPolicy":  "Default",
-				"providerConfigRef": map[string]interface{}{"name": "kubernetes-provider"},
+				"providerConfigRef": map[string]interface{}{"name": os.Getenv("PROVIDER_CONFIG_REF_NAME")},
 			},
 		}
 
