@@ -156,6 +156,53 @@ entries:
   kndp:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-01-02T14:18:53.749273545Z"
+    dependencies:
+    - condition: ingress-nginx.enabled
+      name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: ~4.7.1
+    - condition: argo-cd.enabled
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: ~5.38.0
+    - condition: crossplane.enabled
+      name: crossplane
+      repository: https://charts.crossplane.io/stable
+      version: ~1.14.1
+    - condition: local-repo.enabled
+      name: local-repo
+      repository: file://../../../local-repo/charts/local-repo
+      version: ~0.1.0
+    - condition: backstage-app.enabled
+      name: backstage-app
+      repository: file://../../../backstage/charts/backstage-app
+      version: ~0.1.0
+    - condition: backstage-backend.enabled
+      name: backstage-backend
+      repository: file://../../../backstage/charts/backstage-backend
+      version: ~0.1.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~7.0.0
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ~5.36.1
+    - condition: meal.enabled
+      name: meal
+      repository: file://../../../meal/charts/meal
+      version: ~0.1.0
+    description: A Helm chart for Kubernetes
+    digest: 5cf9b6ee6f604f74944e3402428d10eba763b262d660319bd21c61ec14c77aca
+    name: kndp
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/kndp-0.1.24/kndp-0.1.24.tgz
+    version: 0.1.24
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2023-12-13T13:33:29.363538346Z"
     dependencies:
     - condition: ingress-nginx.enabled
@@ -717,6 +764,17 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/local-repo-0.1.0/local-repo-0.1.0.tgz
     version: 0.1.0
+  meal:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-01-02T14:18:53.749572815Z"
+    description: A Helm chart for Kubernetes
+    digest: d8d9b32a3c73562cfde7c453ecf7a5e339e8eb0405ec596f8bf1d29bfc805b05
+    name: meal
+    type: application
+    urls:
+    - https://github.com/web-seven/kndp/releases/download/meal-0.1.0/meal-0.1.0.tgz
+    version: 0.1.0
   stack-operator:
   - apiVersion: v2
     appVersion: fcd250b404bca645a38bd0b2b3b3fb2d885a8add
@@ -768,4 +826,4 @@ entries:
     urls:
     - https://github.com/web-seven/kndp/releases/download/stack-operator-0.1.0/stack-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-13T13:33:29.333948944Z"
+generated: "2024-01-02T14:18:53.722958835Z"
