@@ -1,0 +1,8 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: {{ .Chart.Name }}-kubernetes-provider
+spec:
+  package: "crossplanecontrib/provider-kubernetes:main"
+  runtimeConfigRef:
+    name: {{ .Chart.Name }}-provider-runtime

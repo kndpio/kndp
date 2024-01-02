@@ -159,3 +159,5 @@ backstage-backend:
         headers:
           Cookie:
             $env: ARGOCD_AUTH_TOKEN
+meal:
+  enabled: true

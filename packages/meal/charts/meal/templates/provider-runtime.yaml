@@ -1,0 +1,23 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: {{ .Chart.Name }}-provider-runtime
+spec:
+  serviceAccountTemplate:
+    metadata:
+      name: {{ .Chart.Name }}-sa
+  deploymentTemplate:
+    spec:
+      selector:
+        matchLabels:
+          app: provider-app
+      template:
+        metadata:
+          labels:
+            app: provider-app
+        spec:
+          containers:
+          - name: provider-container
+            envFrom:
+              - configMapRef:
+                  name: {{ .Chart.Name }}-cm

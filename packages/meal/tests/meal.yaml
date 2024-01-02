@@ -1,0 +1,11 @@
+apiVersion: kndp.io/v1alpha1
+kind: Meal
+metadata:
+  name: meal
+spec:
+  deliveryTime: ""
+  dueOrderTime: ""
+  dueTakeTime: ""
+  employeeRefs: []
+  status: ""
+

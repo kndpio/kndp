@@ -1,0 +1,23 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: {{ .Chart.Name }}-function-runtime
+spec:
+  serviceAccountTemplate:
+    metadata:
+      name: {{ .Chart.Name }}-sa
+  deploymentTemplate:
+    spec:
+      selector:
+        matchLabels:
+          app: meal-app
+      template:
+        metadata:
+          labels:
+            app: meal-app
+        spec:
+          containers:
+          - name: meal-container
+            envFrom:
+              - configMapRef:
+                  name: {{ .Chart.Name }}-cm

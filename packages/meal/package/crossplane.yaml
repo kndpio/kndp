@@ -1,0 +1,5 @@
+apiVersion: meta.pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
+  name: meal-function
+spec: {}
