@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.20.0",
+    "axios": "^0.21.1",
+    "axios-retry": "^3.1.8",
+    "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
+    "jsbn": "^1.1.0",
+    "mailparser": "^2.8.0",
+    "minimist": "^1.2.5",
+    "nocache": "^2.1.0",
+    "smtp-server": "^3.7.0",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4",
+    "winston": "^3.3.3"
+  }
+}
