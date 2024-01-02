@@ -17,4 +17,5 @@ SLACK_COLLECTOR_PORT: "3000"
 
 function:
     image:
+        name: ghcr.io/kndpio/kndp/meal
         tag: ""
