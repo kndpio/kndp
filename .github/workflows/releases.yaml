@@ -81,6 +81,7 @@ jobs:
     - name: Build and push crossplane packages
       run: cat build.txt | xargs -I{} bash -c ' dirname $(find {} -name crossplane.yaml)' | xargs -I{} bash -c './crossplane xpkg build -f {} -o {}/$(basename {}) --embed-runtime-image ${REGISTRY}/${{ github.repository }}/$(basename $(dirname {})):$release_version && ./crossplane xpkg push -f {}/$(basename {}) ${REGISTRY}/${{ github.repository }}/$(basename $(dirname {})):$release_version || true' || true;
 
+
     - name: Package all charts
       id: package
       run: cat build.txt | xargs -I{} bash -c '[ -d {}/charts ] && for chart_dir in {}/charts/*/; do chart_version=$(helm search repo kndp --version "=> ${release_version},<$(semver -i minor "$release_version")" | grep $(basename $chart_dir) | head -1 | awk "{print \$2}") && incremented=$(semver -i patch "$chart_version"); helm package  $chart_dir --version ${incremented:-${release_version}} -u --app-version ${release_version} -d ./all-charts/$(basename $chart_dir)-${incremented:-${release_version}}; done || true';
