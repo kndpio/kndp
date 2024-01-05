@@ -90,13 +90,56 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	}
 
 	if dueOrderTime == "over" {
+
+		jobTemplate := map[string]interface{}{
+			"apiVersion": "kubernetes.crossplane.io/v1alpha1",
+			"kind":       "Object",
+			"metadata": map[string]interface{}{
+				"name": os.Getenv("JOB_NAME"),
+			},
+			"spec": map[string]interface{}{
+				"forProvider": map[string]interface{}{
+					"manifest": map[string]interface{}{
+						"apiVersion": "batch/v1",
+						"kind":       "Job",
+						"metadata": map[string]interface{}{
+							"name":      os.Getenv("JOB_NAME"),
+							"namespace": "default",
+						},
+						"spec": map[string]interface{}{
+							"template": map[string]interface{}{
+								"spec": map[string]interface{}{
+									"serviceAccountName": os.Getenv("JOB_SERVICE_ACCOUNT_NAME"),
+									"containers": []map[string]interface{}{
+										{
+											"name":  "meal-container",
+											"image": os.Getenv("JOB_IMAGE_NAME"),
+											"envFrom": []map[string]interface{}{
+												{"configMapRef": map[string]interface{}{"name": "meal-cm"}},
+											},
+										},
+									},
+									"restartPolicy": "OnFailure",
+								},
+							},
+						},
+					},
+				},
+				"managementPolicy":  "Default",
+				"providerConfigRef": map[string]interface{}{"name": os.Getenv("PROVIDER_CONFIG_REF_NAME")},
+			},
+		}
+
 		unstructuredData := composed.Unstructured{}
+		unstructuredDataByte, _ := json.Marshal(jobTemplate)
+		json.Unmarshal(unstructuredDataByte, &unstructuredData)
 		desired, err := request.GetDesiredComposedResources(req)
+
 		if err != nil {
 			response.Fatal(rsp, errors.Wrapf(err, "cannot get desired resources from %T", req))
 			return rsp, nil
 		}
-		desired[resource.Name("")] = &resource.DesiredComposed{Resource: &unstructuredData}
+		desired[resource.Name(jobTemplate["metadata"].(map[string]interface{})["name"].(string))] = &resource.DesiredComposed{Resource: &unstructuredData}
 
 		if err := response.SetDesiredComposedResources(rsp, desired); err != nil {
 			response.Fatal(rsp, errors.Wrapf(err, "cannot set desired composed resources in %T", rsp))

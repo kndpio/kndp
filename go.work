@@ -6,5 +6,6 @@ use (
 	./packages/meal/function
 	./packages/meal/slack-notify
 	./packages/meal/slack-collector
+	./packages/meal/slack-order
 	./packages/stack/src
 )
