@@ -14,7 +14,7 @@ SLACK_NOTIFY_MESSAGE: "message text"
 SLACK_COLLECTOR_MESSAGE: "message text"
 SLACK_COLLECTOR_URL: "/events"
 SLACK_COLLECTOR_PORT: "3000"
-
+SLACK_ORDER_CHANNEL_ID: ""
 function:
     image:
         name: ghcr.io/kndpio/kndp/meal

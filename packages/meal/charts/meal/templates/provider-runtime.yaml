@@ -17,7 +17,7 @@ spec:
             app: provider-app
         spec:
           containers:
-          - name: provider-container
+          - name: package-runtime
             envFrom:
               - configMapRef:
                   name: {{ .Chart.Name }}-cm
