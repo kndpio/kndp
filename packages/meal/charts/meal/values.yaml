@@ -15,6 +15,10 @@ SLACK_COLLECTOR_MESSAGE: "message text"
 SLACK_COLLECTOR_URL: "/events"
 SLACK_COLLECTOR_PORT: "3000"
 SLACK_ORDER_CHANNEL_ID: ""
+JOB_NAME: "slack-order"
+JOB_SERVICE_ACCOUNT_NAME: "meal-sa"
+JOB_IMAGE_NAME: "ghcr.io/kndpio/kndp/slack-order:0.1.0"
+
 function:
     image:
         name: ghcr.io/kndpio/kndp/meal
